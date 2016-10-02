@@ -27,10 +27,12 @@ using namespace flaggedT;
 TEST_CASE("TMP") {
     SECTION("TMP") {
         int* i;
-        auto ni = NonNull<int*>::make_non_null(std::move(i)); //this throws ///@todo create test case which requires this to throw
+        REQUIRE_THROWS(NonNull<int*>::make_non_null(std::move(i)));
 
-        auto ref = ni.get_data();
-        auto owning = NonNull<int*>::own(std::move(ni));
+        int* i2 = new int(3);
+        auto nn = NonNull<int*>::make_non_null(std::move(i2));
+        auto i2s = NonNull<int*>::own(std::move(nn));
+        delete i2s;
     }
 
     SECTION("TMP2") {
