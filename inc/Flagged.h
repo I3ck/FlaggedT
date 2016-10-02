@@ -2,44 +2,6 @@
 #define FLAGGEDT_H
 
 template <typename T>
-class SortedVector
-{
-private:
-    std::vector<T> data;
-
-public:
-    SortedVector(std::vector<T> in) :
-        data(in)
-    {
-        std::sort(data);
-    }
-
-    SortedVector(std::vector<T>&& in) :
-        data(in)
-    {
-        std::sort(data);
-    }
-
-    SortedVector(SortedVector<T> const& in) :
-        data(in.data)
-    {}
-
-    SortedVector(SortedVector<T>&& in) :
-        data(std::move(in.data))
-    {}
-
-    std::vector<T> const& get_data()
-    {
-        return data;
-    }
-
-    static std::vector<T> own(SortedVector<T>&& in)
-    {
-        return in.data;
-    }
-};
-
-template <typename T>
 class Sorted
 {
 private:
@@ -171,53 +133,6 @@ private:
 };
 
 template <typename T>
-class UniqueVector
-{
-private:
-    std::vector<T> data;
-
-public:
-    UniqueVector(std::vector<T> in) :
-        data(in)
-    {
-        make_data_unique();
-    }
-
-    UniqueVector(std::vector<T>&& in) :
-        data(in)
-    {
-        make_data_unique();
-    }
-
-    UniqueVector(UniqueVector<T> const& in) :
-        data(in.data)
-    {}
-
-    UniqueVector(UniqueVector<T>&& in) :
-        data(std::move(in.data))
-    {}
-
-    std::vector<T> const& get_data() ///@todo const, above as well
-    {
-        return data;
-    }
-
-    static std::vector<T> own(UniqueVector<T>&& in)
-    {
-        return in.data;
-    }
-
-private:
-    void make_data_unique()
-    {
-        if (data.empty())
-            return;
-        auto it = std::unique(data.begin(), data.end());
-        data.resize(std::distance(data.begin(), it));
-    }
-};
-
-template <typename T>
 class NonNull
 {
 private:
@@ -256,8 +171,6 @@ public:
         return in.data;
     }
 };
-
-
 
 
 #endif // FLAGGEDT_H
