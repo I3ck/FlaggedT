@@ -13,6 +13,11 @@ include_directories(
         inc/
 )
 
+add_executable(
+        test_1
+        tests/test_1.cpp
+)
+
 #aux_source_directory(
 #        src/
 #        SRC_LIST
