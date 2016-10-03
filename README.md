@@ -21,7 +21,7 @@ int smallest(Sorted<std::vector<int>> const& sorted) {
     //no need to check whether the input is already sorted
     //or even sort it just to retrieve the smallest value
 
-    return sorted.get()[0];
+    return sorted.get()[0]; //this might fail if sorted is empty, see NonEmpty
 }
 ```
 
@@ -70,6 +70,21 @@ void no_fear(NonNull<shared_ptr<int>> const& in) {
 
 ```
 
+### `NonEmpty<T>`
+```cpp
+auto emptyVec = std::vector<int>();
+auto ne = NonEmpty<std::vector<int>>::make_non_empty(std::move(emptyVec))); //EXCEPTION
+
+auto vec = std::vector<int>({1,2,3});
+auto ne2 = NonEmpty<std::vector<int>>::make_non_empty(std::move(vec))); //works just fine
+
+//Methods now can access the first element without checking the size
+void access_first(NonEmpty<std::vector<int>> const& in) {
+    auto first = in.get()[0]; //this will always work
+}
+
+```
+
 ### Accessing the wrapped data
 
 To ensure that the type reflects the state of the wrapped data, there's only immutable access to it.  
@@ -82,7 +97,7 @@ auto inner = FlaggedTBase<...>::unwrap(std::move(wrappedExample));
 
 Version
 -------
-0.1.0
+0.1.1
 
 License
 ------

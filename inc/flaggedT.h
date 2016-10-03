@@ -190,6 +190,35 @@ public:
         return NonNull<T>(std::move(in));
     }
 };
+
+//------------------------------------------------------------------------------
+
+template <typename T>
+class NonEmpty : public FlaggedTBase<T>
+{
+    using base = FlaggedTBase<T>;
+private:
+    NonEmpty(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    NonEmpty(NonEmpty<T> const& in) :
+        base(in)
+    {}
+
+    NonEmpty(NonEmpty<T>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static NonEmpty<T> make_non_empty(T&& in)
+    {
+        if (in.empty())
+            throw std::logic_error("Can't pass empty container to make_non_empty");
+        return NonEmpty<T>(std::move(in));
+    }
+};
 }
 
 

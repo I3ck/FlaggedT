@@ -49,6 +49,15 @@ TEST_CASE("FlaggedT") {
         delete i2s;
     }
 
+    SECTION("NonEmpty") {
+        auto emptyVec = std::vector<int>();
+        REQUIRE_THROWS(NonEmpty<std::vector<int>>::make_non_empty(std::move(emptyVec)));
+
+        auto goodVec = std::vector<int>({1,2});
+        auto ne = NonEmpty<std::vector<int>>::make_non_empty(std::move(goodVec));
+        REQUIRE(ne.get().size() == 2);
+    }
+
     SECTION("Sorted") {
         std::vector<int> unsorted({1,7,8,14,3});
 

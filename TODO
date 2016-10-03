@@ -4,3 +4,5 @@ BiggerThan<T,size> /// check size() > size on construction
 reverse sorted
 shuffled
 each class its own .h, but a merging .h file (as in cppOpt) ? (only if file becomes too big)
+more tests
+define more combined types
