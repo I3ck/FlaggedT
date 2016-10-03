@@ -44,7 +44,39 @@ public:
 
     static T own(Sorted<T>&& in)
     {
-        return in.datax;
+        return in.data;
+    }
+};
+
+template <typename T>
+class Shuffled
+{
+private:
+    T data;
+
+public:
+    Shuffled(T&& in) :
+        data(in)
+    {
+        std::shuffle(data.begin(), data.end());
+    }
+
+    Shuffled(Shuffled<T> const& in) :
+        data(in.data)
+    {}
+
+    Shuffled(Shuffled<T>&& in) :
+        data(std::move(in.data))
+    {}
+
+    T const& get_data()
+    {
+        return data;
+    }
+
+    static T own(Shuffled<T>&& in)
+    {
+        return in.data;
     }
 };
 

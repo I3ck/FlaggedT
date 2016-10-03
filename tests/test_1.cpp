@@ -24,9 +24,9 @@ using namespace flaggedT;
 
 #define DELTA 0.01
 
-TEST_CASE("TMP") {
-    SECTION("TMP") {
-        int* i;
+TEST_CASE("FlaggedT") {
+    SECTION("NonNull") {
+        int* i = nullptr;
         REQUIRE_THROWS(NonNull<int*>::make_non_null(std::move(i)));
 
         int* i2 = new int(3);
@@ -35,8 +35,27 @@ TEST_CASE("TMP") {
         delete i2s;
     }
 
-    SECTION("TMP2") {
-        std::vector<int> i({1,7,8,14,3});
-        auto sortedMove = Sorted<std::vector<int>>(std::move(i));
+    SECTION("Sorted") {
+        std::vector<int> unsorted({1,7,8,14,3});
+
+        REQUIRE(!std::is_sorted(unsorted.begin(), unsorted.end()));
+
+        auto sorted = Sorted<std::vector<int>>(std::move(unsorted));
+        REQUIRE(std::is_sorted(sorted.get_data().begin(), sorted.get_data().end()));
+    }
+
+    SECTION("UNIQUE") {
+        std::vector<int> duped({1,1,2,2,3,3,7,9,11});
+
+        auto unduped = Unique<std::vector<int>>(std::move(duped));
+        REQUIRE(unduped.get_data().size() == 6);
+    }
+
+    SECTION("UNIQUESORTED") {
+        std::vector<int> dupedUnsorted({11,9,7,3,3,2,2,1,1});
+
+        auto fixed = UniqueAndSorted<std::vector<int>>(std::move(dupedUnsorted));
+        REQUIRE(std::is_sorted(fixed.get_data().begin(), fixed.get_data().end()));
+        REQUIRE(fixed.get_data().size() == 6);
     }
 }
