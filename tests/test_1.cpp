@@ -22,7 +22,21 @@
 using namespace std;
 using namespace flaggedT;
 
-#define DELTA 0.01
+
+//examples (move these to example files) [also the example test case]
+//generator
+NonNull<std::unique_ptr<int>> safe_generator() {
+    return NonNull<std::unique_ptr<int>>::make_non_null(std::unique_ptr<int>(new int(5)));
+}
+
+int no_need_to_check_for_null(NonNull<std::unique_ptr<int>>&& in) {
+    return *(in.get_data().get()) + 1;
+}
+//examples (move these to example files) [also the example test case]
+
+
+
+
 
 TEST_CASE("FlaggedT") {
     SECTION("NonNull") {
@@ -57,5 +71,10 @@ TEST_CASE("FlaggedT") {
         auto fixed = UniqueAndSorted<std::vector<int>>(std::move(dupedUnsorted));
         REQUIRE(std::is_sorted(fixed.get_data().begin(), fixed.get_data().end()));
         REQUIRE(fixed.get_data().size() == 6);
+    }
+
+    SECTION("Move this to an example file") {
+        auto tmp = safe_generator();
+        auto res = no_need_to_check_for_null(std::move(tmp));
     }
 }
