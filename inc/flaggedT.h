@@ -39,7 +39,7 @@ public:
         return data;
     }
 
-    static T own(FlaggedTBase<T>&& in) {
+    static T unwrap(FlaggedTBase<T>&& in) {
         return in.data;
     }
 };

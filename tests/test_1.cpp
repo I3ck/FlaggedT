@@ -45,7 +45,7 @@ TEST_CASE("FlaggedT") {
 
         int* i2 = new int(3);
         auto nn = NonNull<int*>::make_non_null(std::move(i2));
-        auto i2s = NonNull<int*>::own(std::move(nn));
+        auto i2s = NonNull<int*>::unwrap(std::move(nn));
         delete i2s;
     }
 
