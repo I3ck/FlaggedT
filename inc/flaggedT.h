@@ -23,11 +23,19 @@
 
 namespace flaggedT {
 
+//------------------------------------------------------------------------------
+
 template<typename T>
 class FlaggedTBase
 {
+    FlaggedTBase() = delete;
+
 protected:
     T data;
+
+    FlaggedTBase(T const& in)
+        : data(in)
+    {}
 
     FlaggedTBase(T&& in) ///@todo delete or hide other constructors
         : data(std::move(in))
@@ -42,6 +50,8 @@ public:
         return in.data;
     }
 };
+
+//------------------------------------------------------------------------------
 
 
 template <typename T>
@@ -64,6 +74,8 @@ public:
     {}
 };
 
+//------------------------------------------------------------------------------
+
 template <typename T>
 class Shuffled : public FlaggedTBase<T>
 {
@@ -83,6 +95,8 @@ public:
         base(std::move(in))
     {}
 };
+
+//------------------------------------------------------------------------------
 
 template <typename T>
 class Unique : public FlaggedTBase<T>
@@ -112,6 +126,8 @@ private:
         base::data.resize(std::distance(base::data.begin(), it)); ///@todo this might only work on vec find another method
     }
 };
+
+//------------------------------------------------------------------------------
 
 template <typename T>
 class UniqueAndSorted : public FlaggedTBase<T>
@@ -153,6 +169,8 @@ private:
         base::data.resize(std::distance(base::data.begin(), it)); ///@todo this might only work on vec find another method
     }
 };
+
+//------------------------------------------------------------------------------
 
 template <typename T>
 class NonNull : public FlaggedTBase<T>
