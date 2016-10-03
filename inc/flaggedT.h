@@ -14,13 +14,6 @@
 #ifndef FLAGGEDT_H
 #define FLAGGEDT_H
 
-///@todo shared base class
-///@todo move assign
-///@todo reverse sorted
-///@todo shuffled
-///@todo rename get_data to get() (same as smart ptrs)
-///@todo each class its own .h, but a merging .h file (as in cppOpt)
-
 namespace flaggedT {
 
 //------------------------------------------------------------------------------
@@ -37,7 +30,7 @@ protected:
         : data(in)
     {}
 
-    FlaggedTBase(T&& in) ///@todo delete or hide other constructors
+    FlaggedTBase(T&& in)
         : data(std::move(in))
     {}
 
@@ -52,7 +45,6 @@ public:
 };
 
 //------------------------------------------------------------------------------
-
 
 template <typename T>
 class Sorted : public FlaggedTBase<T>
@@ -142,7 +134,7 @@ public:
     }
 
     UniqueAndSorted(UniqueAndSorted<T> const& in) :
-        base(in.data) ///@todo all should use base directly instead of its data
+        base(in.data)
     {}
 
     UniqueAndSorted(UniqueAndSorted<T>&& in) :
@@ -191,11 +183,11 @@ public:
     {}
 
     ///THROWS
-    static NonNull<T> make_non_null(T&& nonNull)
+    static NonNull<T> make_non_null(T&& in)
     {
-        if (nullptr == nonNull)
+        if (nullptr == in)
             throw std::logic_error("Can't pass nullptr to make_non_null");
-        return NonNull<T>(std::move(nonNull));
+        return NonNull<T>(std::move(in));
     }
 };
 }

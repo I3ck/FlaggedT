@@ -1,0 +1,3 @@
+///@todo reverse sorted
+///@todo shuffled
+///@todo each class its own .h, but a merging .h file (as in cppOpt) ? (only if file becomes too big)
