@@ -23,194 +23,154 @@
 
 namespace flaggedT {
 
-template <typename T>
-class Sorted
+template<typename T>
+class FlaggedTBase
 {
-private:
+protected:
     T data;
 
+    FlaggedTBase(T&& in) ///@todo delete or hide other constructors
+        : data(std::move(in))
+    {}
+
+public:
+    T const& get() {
+        return data;
+    }
+
+    static T own(FlaggedTBase<T>&& in) {
+        return in.data;
+    }
+};
+
+
+template <typename T>
+class Sorted : public FlaggedTBase<T>
+{
+    using base = FlaggedTBase<T>;
 public:
     Sorted(T&& in) :
-        data(in)
+        base(std::move(in))
     {
-        std::sort(data.begin(), data.end());
+        std::sort(base::data.begin(), base::data.end());
     }
 
     Sorted(Sorted<T> const& in) :
-        data(in.data)
+        base(in.data)
     {}
 
     Sorted(Sorted<T>&& in) :
-        data(std::move(in.data))
+        base(std::move(in))
     {}
-
-    T const& get_data()
-    {
-        return data;
-    }
-
-    static T own(Sorted<T>&& in)
-    {
-        return in.data;
-    }
 };
 
 template <typename T>
-class Shuffled
+class Shuffled : public FlaggedTBase<T>
 {
-private:
-    T data;
-
+    using base = FlaggedTBase<T>;
 public:
     Shuffled(T&& in) :
-        data(in)
+        base(std::move(in))
     {
-        std::shuffle(data.begin(), data.end());
+        std::shuffle(base::data.begin(), base::data.end());
     }
 
     Shuffled(Shuffled<T> const& in) :
-        data(in.data)
+        base(in.data)
     {}
 
     Shuffled(Shuffled<T>&& in) :
-        data(std::move(in.data))
+        base(std::move(in))
     {}
-
-    T const& get_data()
-    {
-        return data;
-    }
-
-    static T own(Shuffled<T>&& in)
-    {
-        return in.data;
-    }
 };
 
 template <typename T>
-class Unique
+class Unique : public FlaggedTBase<T>
 {
-private:
-    T data;
-
+    using base = FlaggedTBase<T>;
 public:
     Unique(T&& in) :
-        data(in) ///@todo all these should use move too!!!!
+        base(std::move(in))
     {
         make_data_unique();
     }
 
     Unique(Unique<T> const& in) :
-        data(in.data)
+        base::data(in.data)
     {}
 
     Unique(Unique<T>&& in) :
-        data(std::move(in.data))
+        base(std::move(in.data))
     {}
-
-    T const& get_data() ///@todo const, above as well ///@todo rename to read and put all into some abstract base class
-    {
-        return data;
-    }
-
-    static T own(Unique<T>&& in)
-    {
-        return in.data;
-    }
 
 private:
     void make_data_unique()
     {
-        if (data.empty())
+        if (base::data.empty())
             return;
-        auto it = std::unique(data.begin(), data.end());
-        data.resize(std::distance(data.begin(), it)); ///@todo this might only work on vec find another method
+        auto it = std::unique(base::data.begin(), base::data.end());
+        base::data.resize(std::distance(base::data.begin(), it)); ///@todo this might only work on vec find another method
     }
 };
 
 template <typename T>
-class UniqueAndSorted
+class UniqueAndSorted : public FlaggedTBase<T>
 {
-private:
-    T data;
-
+    using base = FlaggedTBase<T>;
 public:
     UniqueAndSorted(T&& in) :
-        data(std::move(in))
+        base(std::move(in))
     {
-        std::sort(data.begin(), data.end());
+        std::sort(base::data.begin(), base::data.end());
         make_data_unique();
     }
 
     UniqueAndSorted(UniqueAndSorted<T> const& in) :
-        data(in.data)
+        base(in.data) ///@todo all should use base directly instead of its data
     {}
 
     UniqueAndSorted(UniqueAndSorted<T>&& in) :
-        data(std::move(in.data))
+        base(std::move(in.data))
     {}
 
     UniqueAndSorted(Unique<T>&& in) :
-        data(std::move(in.data))
+        base(std::move(in.data))
     {
-        std::sort(data.begin(), data.end());
+        std::sort(base::data.begin(), base::data.end());
     }
 
     UniqueAndSorted(Sorted<T>&& in) :
-        data(std::move(in.data))
+        base(std::move(in.data))
     {
         make_data_unique();
     }
-
-    T const& get_data() ///@todo const, above as well ///@todo rename to read and put all into some abstract base class
-    {
-        return data;
-    }
-
-    static T own(Unique<T>&& in)
-    {
-        return in.data;
-    }
-
-
-
 private:
     void make_data_unique() ///@todo duplicate definition
     {
-        if (data.empty())
+        if (base::data.empty())
             return;
-        auto it = std::unique(data.begin(), data.end());
-        data.resize(std::distance(data.begin(), it)); ///@todo this might only work on vec find another method
+        auto it = std::unique(base::data.begin(), base::data.end());
+        base::data.resize(std::distance(base::data.begin(), it)); ///@todo this might only work on vec find another method
     }
-
-
 };
 
 template <typename T>
-class NonNull
+class NonNull : public FlaggedTBase<T>
 {
+    using base = FlaggedTBase<T>;
 private:
-    T data;
-
     NonNull(T&& in) :
-        data(std::move(in))
+        base(std::move(in))
     {}
 
 public:
-
     NonNull(NonNull<T> const& in) :
-        data(in)
+        base(in)
     {}
 
     NonNull(NonNull<T>&& in) :
-        data(std::move(in.data))
+        base(std::move(in.data))
     {}
-
-
-    T const& get_data() const
-    {
-        return data;
-    }
 
     ///THROWS
     static NonNull<T> make_non_null(T&& nonNull)
@@ -218,11 +178,6 @@ public:
         if (nullptr == nonNull)
             throw std::logic_error("Can't pass nullptr to make_non_null");
         return NonNull<T>(std::move(nonNull));
-    }
-
-    static T own(NonNull<T>&& in)
-    {
-        return in.data;
     }
 };
 }

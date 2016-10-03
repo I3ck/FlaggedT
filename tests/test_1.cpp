@@ -30,7 +30,7 @@ NonNull<std::unique_ptr<int>> safe_generator() {
 }
 
 int no_need_to_check_for_null(NonNull<std::unique_ptr<int>>&& in) {
-    return *(in.get_data().get()) + 1;
+    return *(in.get().get()) + 1;
 }
 //examples (move these to example files) [also the example test case]
 
@@ -55,22 +55,22 @@ TEST_CASE("FlaggedT") {
         REQUIRE(!std::is_sorted(unsorted.begin(), unsorted.end()));
 
         auto sorted = Sorted<std::vector<int>>(std::move(unsorted));
-        REQUIRE(std::is_sorted(sorted.get_data().begin(), sorted.get_data().end()));
+        REQUIRE(std::is_sorted(sorted.get().begin(), sorted.get().end()));
     }
 
     SECTION("UNIQUE") {
         std::vector<int> duped({1,1,2,2,3,3,7,9,11});
 
         auto unduped = Unique<std::vector<int>>(std::move(duped));
-        REQUIRE(unduped.get_data().size() == 6);
+        REQUIRE(unduped.get().size() == 6);
     }
 
     SECTION("UNIQUESORTED") {
         std::vector<int> dupedUnsorted({11,9,7,3,3,2,2,1,1});
 
         auto fixed = UniqueAndSorted<std::vector<int>>(std::move(dupedUnsorted));
-        REQUIRE(std::is_sorted(fixed.get_data().begin(), fixed.get_data().end()));
-        REQUIRE(fixed.get_data().size() == 6);
+        REQUIRE(std::is_sorted(fixed.get().begin(), fixed.get().end()));
+        REQUIRE(fixed.get().size() == 6);
     }
 
     SECTION("Move this to an example file") {
