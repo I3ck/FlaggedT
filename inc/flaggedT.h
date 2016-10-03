@@ -14,6 +14,13 @@
 #ifndef FLAGGEDT_H
 #define FLAGGEDT_H
 
+///@todo shared base class
+///@todo move assign
+///@todo reverse sorted
+///@todo shuffled
+///@todo rename get_data to get() (same as smart ptrs)
+///@todo each class its own .h, but a merging .h file (as in cppOpt)
+
 namespace flaggedT {
 
 template <typename T>
