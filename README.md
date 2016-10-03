@@ -1,7 +1,7 @@
 FlaggedT
 ==========
 A C++ library for type level flagging.  
-`Flagged<T>` offers multiple wrapper types which allow you to add properties to your variables on type level.    
+`Flagged<T>` offers multiple wrapper types which allow you to add properties to your variables at type level.    
 
 
 Examples, Tutorials
