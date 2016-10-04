@@ -54,7 +54,7 @@ public:
     Sorted(T&& in) :
         base(std::move(in))
     {
-        std::sort(base::data.begin(), base::data.end());
+        std::sort(std::begin(base::data), std::end(base::data));
     }
 
     Sorted(Sorted<T> const& in) :
@@ -76,7 +76,7 @@ public:
     Shuffled(T&& in) :
         base(std::move(in))
     {
-        std::shuffle(base::data.begin(), base::data.end());
+        std::shuffle(std::begin(base::data), std::end(base::data));
     }
 
     Shuffled(Shuffled<T> const& in) :
@@ -114,8 +114,8 @@ private:
     {
         if (base::data.empty())
             return;
-        auto it = std::unique(base::data.begin(), base::data.end());
-        base::data.resize(std::distance(base::data.begin(), it)); ///@todo this might only work on vec find another method
+        auto it = std::unique(std::begin(base::data), std::end(base::data));
+        base::data.resize(std::distance(std::begin(base::data), it)); ///@todo this might only work on vec find another method
     }
 };
 
@@ -129,7 +129,7 @@ public:
     UniqueAndSorted(T&& in) :
         base(std::move(in))
     {
-        std::sort(base::data.begin(), base::data.end());
+        std::sort(std::begin(base::data), std::end(base::data));
         make_data_unique();
     }
 
@@ -144,7 +144,7 @@ public:
     UniqueAndSorted(Unique<T>&& in) :
         base(std::move(in.data))
     {
-        std::sort(base::data.begin(), base::data.end());
+        std::sort(std::begin(base::data), std::end(base::data));
     }
 
     UniqueAndSorted(Sorted<T>&& in) :
@@ -157,8 +157,8 @@ private:
     {
         if (base::data.empty())
             return;
-        auto it = std::unique(base::data.begin(), base::data.end());
-        base::data.resize(std::distance(base::data.begin(), it)); ///@todo this might only work on vec find another method
+        auto it = std::unique(std::begin(base::data), std::end(base::data));
+        base::data.resize(std::distance(std::begin(base::data), it)); ///@todo this might only work on vec find another method
     }
 };
 
