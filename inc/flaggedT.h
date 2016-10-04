@@ -114,8 +114,7 @@ private:
     {
         if (base::data.empty())
             return;
-        auto it = std::unique(std::begin(base::data), std::end(base::data));
-        base::data.resize(std::distance(std::begin(base::data), it)); ///@todo this might only work on vec find another method
+        base::data.erase(std::unique(std::begin(base::data), std::end(base::data)), std::end(base::data));
     }
 };
 
@@ -157,8 +156,7 @@ private:
     {
         if (base::data.empty())
             return;
-        auto it = std::unique(std::begin(base::data), std::end(base::data));
-        base::data.resize(std::distance(std::begin(base::data), it)); ///@todo this might only work on vec find another method
+        base::data.erase(std::unique(std::begin(base::data), std::end(base::data)), std::end(base::data));
     }
 };
 
