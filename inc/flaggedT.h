@@ -187,6 +187,8 @@ public:
             throw std::logic_error("Can't pass nullptr to make_non_null");
         return NonNull<T>(std::move(in));
     }
+
+    static NonNull make_non_null(nullptr_t) = delete;
 };
 
 //------------------------------------------------------------------------------

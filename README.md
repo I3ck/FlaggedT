@@ -52,11 +52,13 @@ void algorithm_not_allowing_duplicate_data(Unique<std::vector<int>> const& uniqu
 ### `NonNull<T>`
 
 ```cpp
+auto wontCompile = NonNull<int*>::make_non_null(nullptr); //won't compile
+
 int* i = nullptr;
-auto nn = NonNull<int*>::make_non_null(std::move(i)); //EXCEPTION!
+auto throwsException = NonNull<int*>::make_non_null(std::move(i)); //exception
 
 int* i2 = new int(3);
-auto nn2 = NonNull<int*>::make_non_null(std::move(i2)); //works
+auto nn = NonNull<int*>::make_non_null(std::move(i2)); //works
 
 //This is really useful for code which creates smart pointers
 NonNull<shared_ptr<int>> generate() {

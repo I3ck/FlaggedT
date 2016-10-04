@@ -40,6 +40,9 @@ int no_need_to_check_for_null(NonNull<std::unique_ptr<int>>&& in) {
 
 TEST_CASE("FlaggedT") {
     SECTION("NonNull") {
+        //won't even compile, since nullptr_t overload is deleted
+        //auto wontCompile = NonNull<int*>::make_non_null(nullptr);
+
         int* i = nullptr;
         REQUIRE_THROWS(NonNull<int*>::make_non_null(std::move(i)));
 
