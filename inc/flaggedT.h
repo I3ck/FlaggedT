@@ -215,8 +215,95 @@ public:
     static NonEmpty<T> make_non_empty(T&& in)
     {
         if (in.empty())
-            throw std::logic_error("Can't pass empty container to make_non_empty");
+            throw std::logic_error("Can't pass empty container to make_non_empty()");
         return NonEmpty<T>(std::move(in));
+    }
+};
+
+//------------------------------------------------------------------------------
+
+template <typename T, std::size_t SIZE>
+class BiggerThan : public FlaggedTBase<T>
+{
+    using base = FlaggedTBase<T>;
+private:
+    BiggerThan(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    BiggerThan(BiggerThan<T, SIZE> const& in) :
+        base(in)
+    {}
+
+    BiggerThan(BiggerThan<T, SIZE>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static BiggerThan<T, SIZE> make_bigger_than(T&& in)
+    {
+        if (in.size() <= SIZE)
+            throw std::logic_error("Passed too small container to make_bigger_than()");
+        return BiggerThan<T, SIZE>(std::move(in));
+    }
+};
+
+//------------------------------------------------------------------------------
+
+template <typename T, std::size_t SIZE>
+class SmallerThan : public FlaggedTBase<T>
+{
+    using base = FlaggedTBase<T>;
+private:
+    SmallerThan(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    SmallerThan(SmallerThan<T, SIZE> const& in) :
+        base(in)
+    {}
+
+    SmallerThan(SmallerThan<T, SIZE>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static SmallerThan<T, SIZE> make_smaller_than(T&& in)
+    {
+        if (in.size() >= SIZE)
+            throw std::logic_error("Passed too big container to make_smaller_than()");
+        return SmallerThan<T, SIZE>(std::move(in));
+    }
+};
+
+//------------------------------------------------------------------------------
+
+template <typename T, std::size_t SIZE>
+class FixedSized : public FlaggedTBase<T>
+{
+    using base = FlaggedTBase<T>;
+private:
+    FixedSized(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    FixedSized(FixedSized<T, SIZE> const& in) :
+        base(in)
+    {}
+
+    FixedSized(FixedSized<T, SIZE>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static FixedSized<T, SIZE> make_fixed_sized(T&& in)
+    {
+        if (in.size() != SIZE)
+            throw std::logic_error("Passed container with wrong size to make_fixed_sized()");
+        return FixedSized<T, SIZE>(std::move(in));
     }
 };
 }

@@ -61,6 +61,38 @@ TEST_CASE("FlaggedT") {
         REQUIRE(ne.get().size() == 2);
     }
 
+    SECTION("BiggerThan") {
+        auto tooSmall = std::vector<int>({1,2,3});
+        using bigger3 = BiggerThan<std::vector<int>,3>;
+        REQUIRE_THROWS(bigger3::make_bigger_than(std::move(tooSmall)));
+
+        auto bigEnough = std::vector<int>({1,2,3,4});
+        auto works = bigger3::make_bigger_than(std::move(bigEnough));
+        REQUIRE(works.get().size() == 4);
+    }
+
+    SECTION("SmallerThan") {
+        auto tooBig = std::vector<int>({1,2,3});
+        using smaller3 = SmallerThan<std::vector<int>,3>;
+        REQUIRE_THROWS(smaller3::make_smaller_than(std::move(tooBig)));
+
+        auto smallEnough = std::vector<int>({1,2});
+        auto works = smaller3::make_smaller_than(std::move(smallEnough));
+        REQUIRE(works.get().size() == 2);
+    }
+
+    SECTION("FixedSized") {
+        auto tooBig 	= std::vector<int>({1,2,3});
+        auto tooSmall 	= std::vector<int>({1});
+        auto correct	= std::vector<int>({1,2});
+        using fixed2 	= FixedSized<std::vector<int>,2>;
+        REQUIRE_THROWS(fixed2::make_fixed_sized(std::move(tooBig)));
+        REQUIRE_THROWS(fixed2::make_fixed_sized(std::move(tooSmall)));
+
+        auto works = fixed2::make_fixed_sized(std::move(correct));
+        REQUIRE(works.get().size() == 2);
+    }
+
     SECTION("Sorted") {
         std::vector<int> unsorted({1,7,8,14,3});
 

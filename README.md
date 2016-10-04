@@ -84,7 +84,33 @@ auto ne2 = NonEmpty<std::vector<int>>::make_non_empty(std::move(vec))); //works 
 void access_first(NonEmpty<std::vector<int>> const& in) {
     auto first = in.get()[0]; //this will always work
 }
+```
 
+### `BiggerThan<T,SIZE>`
+```cpp
+auto tooSmall = std::vector<int>({1,2,3});
+auto throwsException = BiggerThan<std::vector<int>,3>::make_bigger_than(std::move(tooSmall)); //Exception
+
+auto bigEnough = std::vector<int>({1,2,3,4});
+auto works = BiggerThan<std::vector<int>,3>::make_bigger_than(std::move(bigEnough));
+
+//Methods now can access the first SIZE-elements without checking the size
+void access_four(BiggerThan<std::vector<int>,3> const& in) {
+    auto first = in.get()[0]; //this will always work
+    auto second = in.get()[1]; //this will always work
+    auto third = in.get()[2]; //this will always work
+    auto fourth = in.get()[3]; //this will always work
+}
+```
+
+### `SmallerThan<T,SIZE>`
+```cpp
+//analog to BiggerThan, but forcing the size to be smaller than SIZE
+```
+
+### `FixedSized<T,SIZE>`
+```cpp
+//analog to BiggerThan and SmallerThan, but enforcing an exact size
 ```
 
 ### Accessing the wrapped data
@@ -99,7 +125,7 @@ auto inner = FlaggedTBase<...>::unwrap(std::move(wrappedExample));
 
 Version
 -------
-0.1.3
+0.2.0
 
 License
 ------
