@@ -194,6 +194,94 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T>
+class NonZero : public FlaggedTBase<T> ///@todo README UTEST
+{
+    using base = FlaggedTBase<T>;
+private:
+    NonZero(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    NonZero(NonZero<T> const& in) :
+        base(in)
+    {}
+
+    NonZero(NonZero<T>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static NonZero<T> make_non_zero(T&& in)
+    {
+        if (0 == in)
+            throw std::logic_error("Can't pass 0 to make_non_zero");
+        return NonZero<T>(std::move(in));
+    }
+};
+
+//------------------------------------------------------------------------------
+
+template <typename T>
+class Positive : public FlaggedTBase<T> ///@todo README UTEST
+{
+    using base = FlaggedTBase<T>;
+private:
+    Positive(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    Positive(Positive<T> const& in) :
+        base(in)
+    {}
+
+    Positive(Positive<T>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static Positive<T> make_positive(T&& in)
+    {
+        if (in <= 0)
+            throw std::logic_error("Can't pass <= 0 to make_positive");
+        return Positive<T>(std::move(in));
+    }
+};
+
+//------------------------------------------------------------------------------
+
+template <typename T>
+class Negative : public FlaggedTBase<T> ///@todo README UTEST
+{
+    using base = FlaggedTBase<T>;
+private:
+    Negative(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    Negative(Negative<T> const& in) :
+        base(in)
+    {}
+
+    Negative(Negative<T>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static Negative<T> make_negative(T&& in)
+    {
+        if (in >= 0)
+            throw std::logic_error("Can't pass >= 0 to make_negative");
+        return Negative<T>(std::move(in));
+    }
+};
+
+
+//------------------------------------------------------------------------------
+
+template <typename T>
 class NonEmpty : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
@@ -223,7 +311,7 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T, std::size_t SIZE>
-class BiggerThan : public FlaggedTBase<T>
+class BiggerThan : public FlaggedTBase<T> ///@todo rename and smaller to make clear it's about containers
 {
     using base = FlaggedTBase<T>;
 private:
