@@ -10,6 +10,28 @@ Examples, Tutorials
 using namespace flaggedT;
 ```
 
+### `NonNull<T>`
+
+```cpp
+auto wontCompile = NonNull<int*>::make_non_null(nullptr); //won't compile
+
+int* i = nullptr;
+auto throwsException = NonNull<int*>::make_non_null(std::move(i)); //exception
+
+int* i2 = new int(3);
+auto nn = NonNull<int*>::make_non_null(std::move(i2)); //works
+
+//This is really useful for code which creates smart pointers
+NonNull<shared_ptr<int>> generate() {
+    return NonNull<shared_ptr<int>>::make_non_null(make_shared(new int(3)));
+}
+
+//Methods using a NonNull won't have to check for nullptr anymore
+void no_fear(NonNull<shared_ptr<int>> const& in) {
+    int x = *(in.get().get());
+}
+```
+
 ### `Sorted<T>`
 
 ```cpp
@@ -49,29 +71,6 @@ void algorithm_not_allowing_duplicate_data(Unique<std::vector<int>> const& uniqu
 //data is randomly shuffled
 ```
 
-### `NonNull<T>`
-
-```cpp
-auto wontCompile = NonNull<int*>::make_non_null(nullptr); //won't compile
-
-int* i = nullptr;
-auto throwsException = NonNull<int*>::make_non_null(std::move(i)); //exception
-
-int* i2 = new int(3);
-auto nn = NonNull<int*>::make_non_null(std::move(i2)); //works
-
-//This is really useful for code which creates smart pointers
-NonNull<shared_ptr<int>> generate() {
-    return NonNull<shared_ptr<int>>::make_non_null(make_shared(new int(3)));
-}
-
-//Methods using a NonNull won't have to check for nullptr anymore
-void no_fear(NonNull<shared_ptr<int>> const& in) {
-    int x = *(in.get().get());
-}
-
-```
-
 ### `NonZero<T>`
 ```cpp
 auto zero = 0;
@@ -86,7 +85,7 @@ void safe_div(int nominator, NonZero<int> const& denominator) {
 }
 ```
 
-### `Positive<T>`
+### `Positive<T> : NonZero<T>`
 ```cpp
 //T > 0
 ```
@@ -96,7 +95,7 @@ void safe_div(int nominator, NonZero<int> const& denominator) {
 //T <= 0
 ```
 
-### `Negative<T>`
+### `Negative<T> : NonZero<T>`
 ```cpp
 //T < 0
 ```
@@ -120,7 +119,7 @@ void access_first(NonEmpty<std::vector<int>> const& in) {
 }
 ```
 
-### `BiggerThan<T,SIZE>`
+### `BiggerThan<T,SIZE> : NonEmpty<T>`
 ```cpp
 auto tooSmall = std::vector<int>({1,2,3});
 auto throwsException = BiggerThan<std::vector<int>,3>::make_bigger_than(std::move(tooSmall)); //Exception
@@ -159,7 +158,7 @@ auto inner = FlaggedTBase<...>::unwrap(std::move(wrappedExample));
 
 Version
 -------
-0.4.0
+1.0.0
 
 License
 ------

@@ -47,6 +47,37 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T>
+class NonNull : public FlaggedTBase<T>
+{
+    using base = FlaggedTBase<T>;
+protected:
+    NonNull(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    NonNull(NonNull<T> const& in) :
+        base(in)
+    {}
+
+    NonNull(NonNull<T>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static NonNull<T> make_non_null(T&& in)
+    {
+        if (nullptr == in)
+            throw std::logic_error("Can't pass nullptr to make_non_null");
+        return NonNull<T>(std::move(in));
+    }
+
+    static NonNull make_non_null(nullptr_t) = delete;
+};
+
+//------------------------------------------------------------------------------
+
+template <typename T>
 class Sorted : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
@@ -160,36 +191,6 @@ private:
     }
 };
 
-//------------------------------------------------------------------------------
-
-template <typename T>
-class NonNull : public FlaggedTBase<T>
-{
-    using base = FlaggedTBase<T>;
-private:
-    NonNull(T&& in) :
-        base(std::move(in))
-    {}
-
-public:
-    NonNull(NonNull<T> const& in) :
-        base(in)
-    {}
-
-    NonNull(NonNull<T>&& in) :
-        base(std::move(in.data))
-    {}
-
-    ///THROWS
-    static NonNull<T> make_non_null(T&& in)
-    {
-        if (nullptr == in)
-            throw std::logic_error("Can't pass nullptr to make_non_null");
-        return NonNull<T>(std::move(in));
-    }
-
-    static NonNull make_non_null(nullptr_t) = delete;
-};
 
 //------------------------------------------------------------------------------
 
@@ -197,7 +198,7 @@ template <typename T>
 class NonZero : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-private:
+protected:
     NonZero(T&& in) :
         base(std::move(in))
     {}
@@ -223,9 +224,9 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Positive : public FlaggedTBase<T>
+class Positive : public NonZero<T>
 {
-    using base = FlaggedTBase<T>;
+    using base = NonZero<T>;
 private:
     Positive(T&& in) :
         base(std::move(in))
@@ -279,9 +280,9 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Negative : public FlaggedTBase<T>
+class Negative : public NonZero<T>
 {
-    using base = FlaggedTBase<T>;
+    using base = NonZero<T>;
 private:
     Negative(T&& in) :
         base(std::move(in))
@@ -338,7 +339,7 @@ template <typename T>
 class NonEmpty : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-private:
+protected:
     NonEmpty(T&& in) :
         base(std::move(in))
     {}
@@ -364,9 +365,9 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T, std::size_t SIZE>
-class BiggerThan : public FlaggedTBase<T> ///@todo rename and smaller to make clear it's about containers
+class BiggerThan : public NonEmpty<T> ///@todo rename and smaller to make clear it's about containers
 {
-    using base = FlaggedTBase<T>;
+    using base = NonEmpty<T>;
 private:
     BiggerThan(T&& in) :
         base(std::move(in))

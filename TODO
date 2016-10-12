@@ -1,10 +1,4 @@
 reverse sorted
-each class its own .h, but a merging .h file (as in cppOpt) ? (only if file becomes too big)
-more tests
 define more combined types
 custom sorting predicate ?
-inheritance can improve this e.g. Positive is a NonZero, as well as Negative etc.
-
 rename make_xyz to make() since the type is already well-defined
-
-proper hierarchy Positive is NonZero, Negative is NonZero, all are NonNull.
