@@ -61,6 +61,132 @@ TEST_CASE("FlaggedT") {
         REQUIRE(ne.get().size() == 2);
     }
 
+    SECTION("NonZero") {
+        int ifail = 0;
+        float ffail = 0.0f;
+        double dfail = 0.0;
+
+        int iworks = 1;
+        float fworks = 1.0f;
+        double dworks = 1.0;
+
+        REQUIRE_THROWS(NonZero<int>::make_non_zero(std::move(ifail)));
+        REQUIRE_THROWS(NonZero<float>::make_non_zero(std::move(ffail)));
+        REQUIRE_THROWS(NonZero<double>::make_non_zero(std::move(dfail)));
+
+        auto i = NonZero<int>::make_non_zero(std::move(iworks));
+        auto f = NonZero<float>::make_non_zero(std::move(fworks));
+        auto d = NonZero<double>::make_non_zero(std::move(dworks));
+
+        REQUIRE(i.get() == 1);
+        REQUIRE(f.get() == 1.0f);
+        REQUIRE(d.get() == 1.0);
+    }
+
+    SECTION("Positive") {
+        int ifail = -1;
+        float ffail = -1.0f;
+        double dfail = -1.0;
+
+        int ifail2 = 0;
+        float ffail2 = 0.0f;
+        double dfail2 = 0.0;
+
+        int iworks = 1;
+        float fworks = 1.0f;
+        double dworks = 1.0;
+
+        REQUIRE_THROWS(Positive<int>::make_positive(std::move(ifail)));
+        REQUIRE_THROWS(Positive<float>::make_positive(std::move(ffail)));
+        REQUIRE_THROWS(Positive<double>::make_positive(std::move(dfail)));
+
+        REQUIRE_THROWS(Positive<int>::make_positive(std::move(ifail2)));
+        REQUIRE_THROWS(Positive<float>::make_positive(std::move(ffail2)));
+        REQUIRE_THROWS(Positive<double>::make_positive(std::move(dfail2)));
+
+        auto i = Positive<int>::make_positive(std::move(iworks));
+        auto f = Positive<float>::make_positive(std::move(fworks));
+        auto d = Positive<double>::make_positive(std::move(dworks));
+
+        REQUIRE(i.get() == 1);
+        REQUIRE(f.get() == 1.0f);
+        REQUIRE(d.get() == 1.0);
+    }
+
+    SECTION("NonPositive") {
+        int ifail = 1;
+        float ffail = 1.0f;
+        double dfail = 1.0;
+
+        int iworks = -1;
+        float fworks = -1.0f;
+        double dworks = -1.0;
+
+        REQUIRE_THROWS(NonPositive<int>::make_non_positive(std::move(ifail)));
+        REQUIRE_THROWS(NonPositive<float>::make_non_positive(std::move(ffail)));
+        REQUIRE_THROWS(NonPositive<double>::make_non_positive(std::move(dfail)));
+
+        auto i = NonPositive<int>::make_non_positive(std::move(iworks));
+        auto f = NonPositive<float>::make_non_positive(std::move(fworks));
+        auto d = NonPositive<double>::make_non_positive(std::move(dworks));
+
+        REQUIRE(i.get() == -1);
+        REQUIRE(f.get() == -1.0f);
+        REQUIRE(d.get() == -1.0);
+    }
+
+    SECTION("Negative") {
+        int ifail = 1;
+        float ffail = 1.0f;
+        double dfail = 1.0;
+
+        int ifail2 = 0;
+        float ffail2 = 0.0f;
+        double dfail2 = 0.0;
+
+        int iworks = -1;
+        float fworks = -1.0f;
+        double dworks = -1.0;
+
+        REQUIRE_THROWS(Negative<int>::make_negative(std::move(ifail)));
+        REQUIRE_THROWS(Negative<float>::make_negative(std::move(ffail)));
+        REQUIRE_THROWS(Negative<double>::make_negative(std::move(dfail)));
+
+        REQUIRE_THROWS(Negative<int>::make_negative(std::move(ifail2)));
+        REQUIRE_THROWS(Negative<float>::make_negative(std::move(ffail2)));
+        REQUIRE_THROWS(Negative<double>::make_negative(std::move(dfail2)));
+
+        auto i = Negative<int>::make_negative(std::move(iworks));
+        auto f = Negative<float>::make_negative(std::move(fworks));
+        auto d = Negative<double>::make_negative(std::move(dworks));
+
+        REQUIRE(i.get() == -1);
+        REQUIRE(f.get() == -1.0f);
+        REQUIRE(d.get() == -1.0);
+    }
+
+    SECTION("NonNegative") {
+        int ifail = -1;
+        float ffail = -1.0f;
+        double dfail = -1.0;
+
+        int iworks = 1;
+        float fworks = 1.0f;
+        double dworks = 1.0;
+
+        REQUIRE_THROWS(NonNegative<int>::make_non_negative(std::move(ifail)));
+        REQUIRE_THROWS(NonNegative<float>::make_non_negative(std::move(ffail)));
+        REQUIRE_THROWS(NonNegative<double>::make_non_negative(std::move(dfail)));
+
+        auto i = NonNegative<int>::make_non_negative(std::move(iworks));
+        auto f = NonNegative<float>::make_non_negative(std::move(fworks));
+        auto d = NonNegative<double>::make_non_negative(std::move(dworks));
+
+        REQUIRE(i.get() == 1);
+        REQUIRE(f.get() == 1.0f);
+        REQUIRE(d.get() == 1.0);
+    }
+
     SECTION("BiggerThan") {
         auto tooSmall = std::vector<int>({1,2,3});
         using bigger3 = BiggerThan<std::vector<int>,3>;

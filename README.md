@@ -72,6 +72,40 @@ void no_fear(NonNull<shared_ptr<int>> const& in) {
 
 ```
 
+### `NonZero<T>`
+```cpp
+auto zero = 0;
+auto nz = NonZero<int>::make_non_zero(std::move(zero))); //EXCEPTION
+
+auto i = 2;
+auto nz2 = NonZero<int>::make_non_zero(i); //works just fine
+
+//Division by zero? No problem!
+void safe_div(int nominator, NonZero<int> const& denominator) {
+    return nominator / denominator.get();
+}
+```
+
+### `Positive<T>`
+```cpp
+//T > 0
+```
+
+### `NonPositive<T>`
+```cpp
+//T <= 0
+```
+
+### `Negative<T>`
+```cpp
+//T < 0
+```
+
+### `NonNegative<T>`
+```cpp
+//T >= 0
+```
+
 ### `NonEmpty<T>`
 ```cpp
 auto emptyVec = std::vector<int>();
@@ -125,7 +159,7 @@ auto inner = FlaggedTBase<...>::unwrap(std::move(wrappedExample));
 
 Version
 -------
-0.3.0
+0.4.0
 
 License
 ------

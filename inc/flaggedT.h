@@ -194,7 +194,7 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T>
-class NonZero : public FlaggedTBase<T> ///@todo README UTEST
+class NonZero : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
 private:
@@ -223,7 +223,7 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Positive : public FlaggedTBase<T> ///@todo README UTEST
+class Positive : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
 private:
@@ -249,10 +249,37 @@ public:
     }
 };
 
+template <typename T>
+class NonPositive : public FlaggedTBase<T>
+{
+    using base = FlaggedTBase<T>;
+private:
+    NonPositive(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    NonPositive(NonPositive<T> const& in) :
+        base(in)
+    {}
+
+    NonPositive(NonPositive<T>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static NonPositive<T> make_non_positive(T&& in)
+    {
+        if (in > 0)
+            throw std::logic_error("Can't pass > 0 to make_non_positive");
+        return NonPositive<T>(std::move(in));
+    }
+};
+
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Negative : public FlaggedTBase<T> ///@todo README UTEST
+class Negative : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
 private:
@@ -278,6 +305,32 @@ public:
     }
 };
 
+template <typename T>
+class NonNegative : public FlaggedTBase<T>
+{
+    using base = FlaggedTBase<T>;
+private:
+    NonNegative(T&& in) :
+        base(std::move(in))
+    {}
+
+public:
+    NonNegative(NonNegative<T> const& in) :
+        base(in)
+    {}
+
+    NonNegative(NonNegative<T>&& in) :
+        base(std::move(in.data))
+    {}
+
+    ///THROWS
+    static NonNegative<T> make_non_negative(T&& in)
+    {
+        if (in < 0)
+            throw std::logic_error("Can't pass < 0 to make_non_negative");
+        return NonNegative<T>(std::move(in));
+    }
+};
 
 //------------------------------------------------------------------------------
 
