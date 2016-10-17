@@ -13,17 +13,17 @@ using namespace flaggedT;
 ### `NonNull<T>`
 
 ```cpp
-auto wontCompile = NonNull<int*>::make_non_null(nullptr); //won't compile
+auto wontCompile = NonNull<int*>(nullptr); //won't compile
 
 int* i = nullptr;
-auto throwsException = NonNull<int*>::make_non_null(std::move(i)); //exception
+auto throwsException = NonNull<int*>(std::move(i)); //exception
 
 int* i2 = new int(3);
-auto nn = NonNull<int*>::make_non_null(std::move(i2)); //works
+auto nn = NonNull<int*>(std::move(i2)); //works
 
 //This is really useful for code which creates smart pointers
 NonNull<shared_ptr<int>> generate() {
-    return NonNull<shared_ptr<int>>::make_non_null(make_shared(new int(3)));
+    return NonNull<shared_ptr<int>>(make_shared(new int(3)));
 }
 
 //Methods using a NonNull won't have to check for nullptr anymore
@@ -74,10 +74,10 @@ void algorithm_not_allowing_duplicate_data(Unique<std::vector<int>> const& uniqu
 ### `NonZero<T>`
 ```cpp
 auto zero = 0;
-auto nz = NonZero<int>::make_non_zero(std::move(zero))); //EXCEPTION
+auto nz = NonZero<int>(std::move(zero))); //EXCEPTION
 
 auto i = 2;
-auto nz2 = NonZero<int>::make_non_zero(i); //works just fine
+auto nz2 = NonZero<int>(i); //works just fine
 
 //Division by zero? No problem!
 void safe_div(int nominator, NonZero<int> const& denominator) {
@@ -108,10 +108,10 @@ void safe_div(int nominator, NonZero<int> const& denominator) {
 ### `NonEmpty<T>`
 ```cpp
 auto emptyVec = std::vector<int>();
-auto ne = NonEmpty<std::vector<int>>::make_non_empty(std::move(emptyVec))); //EXCEPTION
+auto ne = NonEmpty<std::vector<int>>(std::move(emptyVec))); //EXCEPTION
 
 auto vec = std::vector<int>({1,2,3});
-auto ne2 = NonEmpty<std::vector<int>>::make_non_empty(std::move(vec))); //works just fine
+auto ne2 = NonEmpty<std::vector<int>>(std::move(vec))); //works just fine
 
 //Methods now can access the first element without checking the size
 void access_first(NonEmpty<std::vector<int>> const& in) {
@@ -122,10 +122,10 @@ void access_first(NonEmpty<std::vector<int>> const& in) {
 ### `BiggerThan<T,SIZE> : NonEmpty<T>`
 ```cpp
 auto tooSmall = std::vector<int>({1,2,3});
-auto throwsException = BiggerThan<std::vector<int>,3>::make_bigger_than(std::move(tooSmall)); //Exception
+auto throwsException = BiggerThan<std::vector<int>,3>(std::move(tooSmall)); //Exception
 
 auto bigEnough = std::vector<int>({1,2,3,4});
-auto works = BiggerThan<std::vector<int>,3>::make_bigger_than(std::move(bigEnough));
+auto works = BiggerThan<std::vector<int>,3>(std::move(bigEnough));
 
 //Methods now can access the first SIZE-elements without checking the size
 void access_four(BiggerThan<std::vector<int>,3> const& in) {
@@ -158,7 +158,7 @@ auto inner = FlaggedTBase<...>::unwrap(std::move(wrappedExample));
 
 Version
 -------
-1.0.0
+1.1.0
 
 License
 ------

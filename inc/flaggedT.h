@@ -50,12 +50,17 @@ template <typename T>
 class NonNull : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-protected:
+public:
+    NonNull(nullptr_t) = delete;
+
+    ///THROWS
     NonNull(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (nullptr == base::data)
+            throw std::logic_error("Can't pass nullptr to constructor of NonNull");
+    }
 
-public:
     NonNull(NonNull<T> const& in) :
         base(in)
     {}
@@ -63,16 +68,6 @@ public:
     NonNull(NonNull<T>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static NonNull<T> make_non_null(T&& in)
-    {
-        if (nullptr == in)
-            throw std::logic_error("Can't pass nullptr to make_non_null");
-        return NonNull<T>(std::move(in));
-    }
-
-    static NonNull make_non_null(nullptr_t) = delete;
 };
 
 //------------------------------------------------------------------------------
@@ -198,12 +193,15 @@ template <typename T>
 class NonZero : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-protected:
+public:
+    ///THROWS
     NonZero(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (0 == base::data)
+            throw std::logic_error("Can't pass 0 to constructor of NonZero");
+    }
 
-public:
     NonZero(NonZero<T> const& in) :
         base(in)
     {}
@@ -211,14 +209,6 @@ public:
     NonZero(NonZero<T>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static NonZero<T> make_non_zero(T&& in)
-    {
-        if (0 == in)
-            throw std::logic_error("Can't pass 0 to make_non_zero");
-        return NonZero<T>(std::move(in));
-    }
 };
 
 //------------------------------------------------------------------------------
@@ -227,12 +217,15 @@ template <typename T>
 class Positive : public NonZero<T>
 {
     using base = NonZero<T>;
-private:
+public:
+    ///THROWS
     Positive(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (base::data <= 0)
+            throw std::logic_error("Can't pass <= 0 to constructor of Positive");
+    }
 
-public:
     Positive(Positive<T> const& in) :
         base(in)
     {}
@@ -240,26 +233,21 @@ public:
     Positive(Positive<T>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static Positive<T> make_positive(T&& in)
-    {
-        if (in <= 0)
-            throw std::logic_error("Can't pass <= 0 to make_positive");
-        return Positive<T>(std::move(in));
-    }
 };
 
 template <typename T>
 class NonPositive : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-private:
+public:
+    ///THROWS
     NonPositive(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (base::data > 0)
+            throw std::logic_error("Can't pass > 0 to constructor of NonPositive");
+    }
 
-public:
     NonPositive(NonPositive<T> const& in) :
         base(in)
     {}
@@ -267,14 +255,6 @@ public:
     NonPositive(NonPositive<T>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static NonPositive<T> make_non_positive(T&& in)
-    {
-        if (in > 0)
-            throw std::logic_error("Can't pass > 0 to make_non_positive");
-        return NonPositive<T>(std::move(in));
-    }
 };
 
 //------------------------------------------------------------------------------
@@ -283,12 +263,15 @@ template <typename T>
 class Negative : public NonZero<T>
 {
     using base = NonZero<T>;
-private:
+public:
+    ///THROWS
     Negative(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (base::data >= 0)
+            throw std::logic_error("Can't pass >= 0 to constructor of Negative");
+    }
 
-public:
     Negative(Negative<T> const& in) :
         base(in)
     {}
@@ -296,26 +279,21 @@ public:
     Negative(Negative<T>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static Negative<T> make_negative(T&& in)
-    {
-        if (in >= 0)
-            throw std::logic_error("Can't pass >= 0 to make_negative");
-        return Negative<T>(std::move(in));
-    }
 };
 
 template <typename T>
 class NonNegative : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-private:
+public:
+    ///THROWS
     NonNegative(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (base::data < 0)
+            throw std::logic_error("Can't pass < 0 to constructor of NonNegative");
+    }
 
-public:
     NonNegative(NonNegative<T> const& in) :
         base(in)
     {}
@@ -323,14 +301,6 @@ public:
     NonNegative(NonNegative<T>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static NonNegative<T> make_non_negative(T&& in)
-    {
-        if (in < 0)
-            throw std::logic_error("Can't pass < 0 to make_non_negative");
-        return NonNegative<T>(std::move(in));
-    }
 };
 
 //------------------------------------------------------------------------------
@@ -339,12 +309,15 @@ template <typename T>
 class NonEmpty : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-protected:
+public:
+    ///THROWS
     NonEmpty(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (base::data.empty())
+            throw std::logic_error("Can't pass empty container to constructor of NonEmpty");
+    }
 
-public:
     NonEmpty(NonEmpty<T> const& in) :
         base(in)
     {}
@@ -352,14 +325,6 @@ public:
     NonEmpty(NonEmpty<T>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static NonEmpty<T> make_non_empty(T&& in)
-    {
-        if (in.empty())
-            throw std::logic_error("Can't pass empty container to make_non_empty()");
-        return NonEmpty<T>(std::move(in));
-    }
 };
 
 //------------------------------------------------------------------------------
@@ -368,12 +333,15 @@ template <typename T, std::size_t SIZE>
 class BiggerThan : public NonEmpty<T> ///@todo rename and smaller to make clear it's about containers
 {
     using base = NonEmpty<T>;
-private:
+public:
+    ///THROWS
     BiggerThan(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (base::data.size() <= SIZE)
+            throw std::logic_error("Passed too small container to constructor of BiggerThan");
+    }
 
-public:
     BiggerThan(BiggerThan<T, SIZE> const& in) :
         base(in)
     {}
@@ -381,14 +349,6 @@ public:
     BiggerThan(BiggerThan<T, SIZE>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static BiggerThan<T, SIZE> make_bigger_than(T&& in)
-    {
-        if (in.size() <= SIZE)
-            throw std::logic_error("Passed too small container to make_bigger_than()");
-        return BiggerThan<T, SIZE>(std::move(in));
-    }
 };
 
 //------------------------------------------------------------------------------
@@ -397,12 +357,15 @@ template <typename T, std::size_t SIZE>
 class SmallerThan : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-private:
+public:
+    ///THROWS
     SmallerThan(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (base::data.size() >= SIZE)
+            throw std::logic_error("Passed too big container to constructor of SmallerThan");
+    }
 
-public:
     SmallerThan(SmallerThan<T, SIZE> const& in) :
         base(in)
     {}
@@ -410,14 +373,6 @@ public:
     SmallerThan(SmallerThan<T, SIZE>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static SmallerThan<T, SIZE> make_smaller_than(T&& in)
-    {
-        if (in.size() >= SIZE)
-            throw std::logic_error("Passed too big container to make_smaller_than()");
-        return SmallerThan<T, SIZE>(std::move(in));
-    }
 };
 
 //------------------------------------------------------------------------------
@@ -426,12 +381,15 @@ template <typename T, std::size_t SIZE>
 class FixedSized : public FlaggedTBase<T>
 {
     using base = FlaggedTBase<T>;
-private:
+public:
+    ///THROWS
     FixedSized(T&& in) :
         base(std::move(in))
-    {}
+    {
+        if (base::data.size() != SIZE)
+            throw std::logic_error("Passed container with wrong size to constructor of FixedSized");
+    }
 
-public:
     FixedSized(FixedSized<T, SIZE> const& in) :
         base(in)
     {}
@@ -439,14 +397,6 @@ public:
     FixedSized(FixedSized<T, SIZE>&& in) :
         base(std::move(in.data))
     {}
-
-    ///THROWS
-    static FixedSized<T, SIZE> make_fixed_sized(T&& in)
-    {
-        if (in.size() != SIZE)
-            throw std::logic_error("Passed container with wrong size to make_fixed_sized()");
-        return FixedSized<T, SIZE>(std::move(in));
-    }
 };
 }
 
