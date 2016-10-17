@@ -18,9 +18,8 @@ namespace flaggedT {
 
 //------------------------------------------------------------------------------
 
-template<typename T>
-class FlaggedTBase
-{
+template <typename T>
+class FlaggedTBase {
     FlaggedTBase() = delete;
 
 protected:
@@ -28,18 +27,22 @@ protected:
 
     FlaggedTBase(T const& in)
         : data(in)
-    {}
+    {
+    }
 
     FlaggedTBase(T&& in)
         : data(std::move(in))
-    {}
+    {
+    }
 
 public:
-    T const& get() {
+    T const& get()
+    {
         return data;
     }
 
-    static T unwrap(FlaggedTBase<T>&& in) {
+    static T unwrap(FlaggedTBase<T>&& in)
+    {
         return in.data;
     }
 };
@@ -47,93 +50,101 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T>
-class NonNull : public FlaggedTBase<T>
-{
+class NonNull : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
     NonNull(nullptr_t) = delete;
 
     ///THROWS
-    NonNull(T&& in) :
-        base(std::move(in))
+    NonNull(T&& in)
+        : base(std::move(in))
     {
         if (nullptr == base::data)
             throw std::logic_error("Can't pass nullptr to constructor of NonNull");
     }
 
-    NonNull(NonNull<T> const& in) :
-        base(in)
-    {}
+    NonNull(NonNull<T> const& in)
+        : base(in)
+    {
+    }
 
-    NonNull(NonNull<T>&& in) :
-        base(std::move(in.data))
-    {}
+    NonNull(NonNull<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Sorted : public FlaggedTBase<T>
-{
+class Sorted : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
-    Sorted(T&& in) :
-        base(std::move(in))
+    Sorted(T&& in)
+        : base(std::move(in))
     {
         std::sort(std::begin(base::data), std::end(base::data));
     }
 
-    Sorted(Sorted<T> const& in) :
-        base(in.data)
-    {}
+    Sorted(Sorted<T> const& in)
+        : base(in.data)
+    {
+    }
 
-    Sorted(Sorted<T>&& in) :
-        base(std::move(in))
-    {}
+    Sorted(Sorted<T>&& in)
+        : base(std::move(in))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Shuffled : public FlaggedTBase<T>
-{
+class Shuffled : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
-    Shuffled(T&& in) :
-        base(std::move(in))
+    Shuffled(T&& in)
+        : base(std::move(in))
     {
         std::shuffle(std::begin(base::data), std::end(base::data));
     }
 
-    Shuffled(Shuffled<T> const& in) :
-        base(in.data)
-    {}
+    Shuffled(Shuffled<T> const& in)
+        : base(in.data)
+    {
+    }
 
-    Shuffled(Shuffled<T>&& in) :
-        base(std::move(in))
-    {}
+    Shuffled(Shuffled<T>&& in)
+        : base(std::move(in))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Unique : public FlaggedTBase<T>
-{
+class Unique : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
-    Unique(T&& in) :
-        base(std::move(in))
+    Unique(T&& in)
+        : base(std::move(in))
     {
         make_data_unique();
     }
 
-    Unique(Unique<T> const& in) :
-        base::data(in.data)
-    {}
+    Unique(Unique<T> const& in)
+        : base::data(in.data)
+    {
+    }
 
-    Unique(Unique<T>&& in) :
-        base(std::move(in.data))
-    {}
+    Unique(Unique<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 
 private:
     void make_data_unique()
@@ -147,36 +158,39 @@ private:
 //------------------------------------------------------------------------------
 
 template <typename T>
-class UniqueAndSorted : public FlaggedTBase<T>
-{
+class UniqueAndSorted : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
-    UniqueAndSorted(T&& in) :
-        base(std::move(in))
+    UniqueAndSorted(T&& in)
+        : base(std::move(in))
     {
         std::sort(std::begin(base::data), std::end(base::data));
         make_data_unique();
     }
 
-    UniqueAndSorted(UniqueAndSorted<T> const& in) :
-        base(in.data)
-    {}
+    UniqueAndSorted(UniqueAndSorted<T> const& in)
+        : base(in.data)
+    {
+    }
 
-    UniqueAndSorted(UniqueAndSorted<T>&& in) :
-        base(std::move(in.data))
-    {}
+    UniqueAndSorted(UniqueAndSorted<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 
-    UniqueAndSorted(Unique<T>&& in) :
-        base(std::move(in.data))
+    UniqueAndSorted(Unique<T>&& in)
+        : base(std::move(in.data))
     {
         std::sort(std::begin(base::data), std::end(base::data));
     }
 
-    UniqueAndSorted(Sorted<T>&& in) :
-        base(std::move(in.data))
+    UniqueAndSorted(Sorted<T>&& in)
+        : base(std::move(in.data))
     {
         make_data_unique();
     }
+
 private:
     void make_data_unique() ///@todo duplicate definition
     {
@@ -186,145 +200,156 @@ private:
     }
 };
 
-
 //------------------------------------------------------------------------------
 
 template <typename T>
-class NonZero : public FlaggedTBase<T>
-{
+class NonZero : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
     ///THROWS
-    NonZero(T&& in) :
-        base(std::move(in))
+    NonZero(T&& in)
+        : base(std::move(in))
     {
         if (0 == base::data)
             throw std::logic_error("Can't pass 0 to constructor of NonZero");
     }
 
-    NonZero(NonZero<T> const& in) :
-        base(in)
-    {}
+    NonZero(NonZero<T> const& in)
+        : base(in)
+    {
+    }
 
-    NonZero(NonZero<T>&& in) :
-        base(std::move(in.data))
-    {}
+    NonZero(NonZero<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Positive : public NonZero<T>
-{
+class Positive : public NonZero<T> {
     using base = NonZero<T>;
+
 public:
     ///THROWS
-    Positive(T&& in) :
-        base(std::move(in))
+    Positive(T&& in)
+        : base(std::move(in))
     {
         if (base::data <= 0)
             throw std::logic_error("Can't pass <= 0 to constructor of Positive");
     }
 
-    Positive(Positive<T> const& in) :
-        base(in)
-    {}
+    Positive(Positive<T> const& in)
+        : base(in)
+    {
+    }
 
-    Positive(Positive<T>&& in) :
-        base(std::move(in.data))
-    {}
+    Positive(Positive<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 template <typename T>
-class NonPositive : public FlaggedTBase<T>
-{
+class NonPositive : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
     ///THROWS
-    NonPositive(T&& in) :
-        base(std::move(in))
+    NonPositive(T&& in)
+        : base(std::move(in))
     {
         if (base::data > 0)
             throw std::logic_error("Can't pass > 0 to constructor of NonPositive");
     }
 
-    NonPositive(NonPositive<T> const& in) :
-        base(in)
-    {}
+    NonPositive(NonPositive<T> const& in)
+        : base(in)
+    {
+    }
 
-    NonPositive(NonPositive<T>&& in) :
-        base(std::move(in.data))
-    {}
+    NonPositive(NonPositive<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T>
-class Negative : public NonZero<T>
-{
+class Negative : public NonZero<T> {
     using base = NonZero<T>;
+
 public:
     ///THROWS
-    Negative(T&& in) :
-        base(std::move(in))
+    Negative(T&& in)
+        : base(std::move(in))
     {
         if (base::data >= 0)
             throw std::logic_error("Can't pass >= 0 to constructor of Negative");
     }
 
-    Negative(Negative<T> const& in) :
-        base(in)
-    {}
+    Negative(Negative<T> const& in)
+        : base(in)
+    {
+    }
 
-    Negative(Negative<T>&& in) :
-        base(std::move(in.data))
-    {}
+    Negative(Negative<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 template <typename T>
-class NonNegative : public FlaggedTBase<T>
-{
+class NonNegative : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
     ///THROWS
-    NonNegative(T&& in) :
-        base(std::move(in))
+    NonNegative(T&& in)
+        : base(std::move(in))
     {
         if (base::data < 0)
             throw std::logic_error("Can't pass < 0 to constructor of NonNegative");
     }
 
-    NonNegative(NonNegative<T> const& in) :
-        base(in)
-    {}
+    NonNegative(NonNegative<T> const& in)
+        : base(in)
+    {
+    }
 
-    NonNegative(NonNegative<T>&& in) :
-        base(std::move(in.data))
-    {}
+    NonNegative(NonNegative<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T>
-class NonEmpty : public FlaggedTBase<T>
-{
+class NonEmpty : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
     ///THROWS
-    NonEmpty(T&& in) :
-        base(std::move(in))
+    NonEmpty(T&& in)
+        : base(std::move(in))
     {
         if (base::data.empty())
             throw std::logic_error("Can't pass empty container to constructor of NonEmpty");
     }
 
-    NonEmpty(NonEmpty<T> const& in) :
-        base(in)
-    {}
+    NonEmpty(NonEmpty<T> const& in)
+        : base(in)
+    {
+    }
 
-    NonEmpty(NonEmpty<T>&& in) :
-        base(std::move(in.data))
-    {}
+    NonEmpty(NonEmpty<T>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
@@ -333,72 +358,78 @@ template <typename T, std::size_t SIZE>
 class BiggerThan : public NonEmpty<T> ///@todo rename and smaller to make clear it's about containers
 {
     using base = NonEmpty<T>;
+
 public:
     ///THROWS
-    BiggerThan(T&& in) :
-        base(std::move(in))
+    BiggerThan(T&& in)
+        : base(std::move(in))
     {
         if (base::data.size() <= SIZE)
             throw std::logic_error("Passed too small container to constructor of BiggerThan");
     }
 
-    BiggerThan(BiggerThan<T, SIZE> const& in) :
-        base(in)
-    {}
+    BiggerThan(BiggerThan<T, SIZE> const& in)
+        : base(in)
+    {
+    }
 
-    BiggerThan(BiggerThan<T, SIZE>&& in) :
-        base(std::move(in.data))
-    {}
+    BiggerThan(BiggerThan<T, SIZE>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T, std::size_t SIZE>
-class SmallerThan : public FlaggedTBase<T>
-{
+class SmallerThan : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
     ///THROWS
-    SmallerThan(T&& in) :
-        base(std::move(in))
+    SmallerThan(T&& in)
+        : base(std::move(in))
     {
         if (base::data.size() >= SIZE)
             throw std::logic_error("Passed too big container to constructor of SmallerThan");
     }
 
-    SmallerThan(SmallerThan<T, SIZE> const& in) :
-        base(in)
-    {}
+    SmallerThan(SmallerThan<T, SIZE> const& in)
+        : base(in)
+    {
+    }
 
-    SmallerThan(SmallerThan<T, SIZE>&& in) :
-        base(std::move(in.data))
-    {}
+    SmallerThan(SmallerThan<T, SIZE>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T, std::size_t SIZE>
-class FixedSized : public FlaggedTBase<T>
-{
+class FixedSized : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
+
 public:
     ///THROWS
-    FixedSized(T&& in) :
-        base(std::move(in))
+    FixedSized(T&& in)
+        : base(std::move(in))
     {
         if (base::data.size() != SIZE)
             throw std::logic_error("Passed container with wrong size to constructor of FixedSized");
     }
 
-    FixedSized(FixedSized<T, SIZE> const& in) :
-        base(in)
-    {}
+    FixedSized(FixedSized<T, SIZE> const& in)
+        : base(in)
+    {
+    }
 
-    FixedSized(FixedSized<T, SIZE>&& in) :
-        base(std::move(in.data))
-    {}
+    FixedSized(FixedSized<T, SIZE>&& in)
+        : base(std::move(in.data))
+    {
+    }
 };
 }
-
 
 #endif // FLAGGEDT_H
