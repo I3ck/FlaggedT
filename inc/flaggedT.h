@@ -20,9 +20,14 @@ namespace flaggedT {
 
 template <typename T>
 class FlaggedTBase {
-    FlaggedTBase() = delete;
-
 protected:
+    FlaggedTBase()									= delete;
+
+    FlaggedTBase(FlaggedTBase const&) 				= default;
+    FlaggedTBase(FlaggedTBase&&) 					= default;
+    FlaggedTBase& operator=(FlaggedTBase const&)	= default;
+    FlaggedTBase& operator=(FlaggedTBase&&)			= default;
+
     T data;
 
     FlaggedTBase(T const& in)
@@ -54,7 +59,13 @@ class NonNull : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    NonNull(nullptr_t) = delete;
+    NonNull()							= delete;
+    NonNull(nullptr_t) 					= delete;
+
+    NonNull(NonNull const&) 			= default;
+    NonNull(NonNull&&) 					= default;
+    NonNull& operator=(NonNull const&) 	= default;
+    NonNull& operator=(NonNull&&)		= default;
 
     ///THROWS
     NonNull(T&& in)
@@ -64,15 +75,6 @@ public:
             throw std::logic_error("Can't pass nullptr to constructor of NonNull");
     }
 
-    NonNull(NonNull<T> const& in)
-        : base(in)
-    {
-    }
-
-    NonNull(NonNull<T>&& in)
-        : base(std::move(in.data))
-    {
-    }
 };
 
 //------------------------------------------------------------------------------
@@ -82,20 +84,17 @@ class Sorted : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    Sorted()							= delete;
+
+    Sorted(Sorted const&) 				= default;
+    Sorted(Sorted&&) 					= default;
+    Sorted& operator=(Sorted const&)	= default;
+    Sorted& operator=(Sorted&&)			= default;
+
     Sorted(T&& in)
         : base(std::move(in))
     {
         std::sort(std::begin(base::data), std::end(base::data));
-    }
-
-    Sorted(Sorted<T> const& in)
-        : base(in.data)
-    {
-    }
-
-    Sorted(Sorted<T>&& in)
-        : base(std::move(in))
-    {
     }
 };
 
@@ -106,20 +105,17 @@ class Shuffled : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    Shuffled()								= delete;
+
+    Shuffled(Shuffled const&) 				= default;
+    Shuffled(Shuffled&&) 					= default;
+    Shuffled& operator=(Shuffled const&)	= default;
+    Shuffled& operator=(Shuffled&&)			= default;
+
     Shuffled(T&& in)
         : base(std::move(in))
     {
         std::shuffle(std::begin(base::data), std::end(base::data));
-    }
-
-    Shuffled(Shuffled<T> const& in)
-        : base(in.data)
-    {
-    }
-
-    Shuffled(Shuffled<T>&& in)
-        : base(std::move(in))
-    {
     }
 };
 
@@ -130,20 +126,17 @@ class Unique : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    Unique()							= delete;
+
+    Unique(Unique const&) 				= default;
+    Unique(Unique&&) 					= default;
+    Unique& operator=(Unique const&)	= default;
+    Unique& operator=(Unique&&)			= default;
+
     Unique(T&& in)
         : base(std::move(in))
     {
         make_data_unique();
-    }
-
-    Unique(Unique<T> const& in)
-        : base::data(in.data)
-    {
-    }
-
-    Unique(Unique<T>&& in)
-        : base(std::move(in.data))
-    {
     }
 
 private:
@@ -162,21 +155,18 @@ class UniqueAndSorted : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    UniqueAndSorted()									= delete;
+
+    UniqueAndSorted(UniqueAndSorted const&) 			= default;
+    UniqueAndSorted(UniqueAndSorted&&) 					= default;
+    UniqueAndSorted& operator=(UniqueAndSorted const&)	= default;
+    UniqueAndSorted& operator=(UniqueAndSorted&&)		= default;
+
     UniqueAndSorted(T&& in)
         : base(std::move(in))
     {
         std::sort(std::begin(base::data), std::end(base::data));
         make_data_unique();
-    }
-
-    UniqueAndSorted(UniqueAndSorted<T> const& in)
-        : base(in.data)
-    {
-    }
-
-    UniqueAndSorted(UniqueAndSorted<T>&& in)
-        : base(std::move(in.data))
-    {
     }
 
     UniqueAndSorted(Unique<T>&& in)
@@ -207,22 +197,19 @@ class NonZero : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    NonZero()							= delete;
+
+    NonZero(NonZero const&) 			= default;
+    NonZero(NonZero&&) 					= default;
+    NonZero& operator=(NonZero const&)	= default;
+    NonZero& operator=(NonZero&&)		= default;
+
     ///THROWS
     NonZero(T&& in)
         : base(std::move(in))
     {
         if (0 == base::data)
             throw std::logic_error("Can't pass 0 to constructor of NonZero");
-    }
-
-    NonZero(NonZero<T> const& in)
-        : base(in)
-    {
-    }
-
-    NonZero(NonZero<T>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 
@@ -233,22 +220,19 @@ class Positive : public NonZero<T> {
     using base = NonZero<T>;
 
 public:
+    Positive()								= delete;
+
+    Positive(Positive const&) 				= default;
+    Positive(Positive&&) 					= default;
+    Positive& operator=(Positive const&)	= default;
+    Positive& operator=(Positive&&)			= default;
+
     ///THROWS
     Positive(T&& in)
         : base(std::move(in))
     {
         if (base::data <= 0)
             throw std::logic_error("Can't pass <= 0 to constructor of Positive");
-    }
-
-    Positive(Positive<T> const& in)
-        : base(in)
-    {
-    }
-
-    Positive(Positive<T>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 
@@ -257,22 +241,19 @@ class NonPositive : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    NonPositive()								= delete;
+
+    NonPositive(NonPositive const&) 			= default;
+    NonPositive(NonPositive&&) 					= default;
+    NonPositive& operator=(NonPositive const&)	= default;
+    NonPositive& operator=(NonPositive&&)		= default;
+
     ///THROWS
     NonPositive(T&& in)
         : base(std::move(in))
     {
         if (base::data > 0)
             throw std::logic_error("Can't pass > 0 to constructor of NonPositive");
-    }
-
-    NonPositive(NonPositive<T> const& in)
-        : base(in)
-    {
-    }
-
-    NonPositive(NonPositive<T>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 
@@ -283,22 +264,19 @@ class Negative : public NonZero<T> {
     using base = NonZero<T>;
 
 public:
+    Negative()								= delete;
+
+    Negative(Negative const&) 				= default;
+    Negative(Negative&&) 					= default;
+    Negative& operator=(Negative const&)	= default;
+    Negative& operator=(Negative&&)			= default;
+
     ///THROWS
     Negative(T&& in)
         : base(std::move(in))
     {
         if (base::data >= 0)
             throw std::logic_error("Can't pass >= 0 to constructor of Negative");
-    }
-
-    Negative(Negative<T> const& in)
-        : base(in)
-    {
-    }
-
-    Negative(Negative<T>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 
@@ -307,22 +285,19 @@ class NonNegative : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    NonNegative()								= delete;
+
+    NonNegative(NonNegative const&) 			= default;
+    NonNegative(NonNegative&&) 					= default;
+    NonNegative& operator=(NonNegative const&)	= default;
+    NonNegative& operator=(NonNegative&&)		= default;
+
     ///THROWS
     NonNegative(T&& in)
         : base(std::move(in))
     {
         if (base::data < 0)
             throw std::logic_error("Can't pass < 0 to constructor of NonNegative");
-    }
-
-    NonNegative(NonNegative<T> const& in)
-        : base(in)
-    {
-    }
-
-    NonNegative(NonNegative<T>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 
@@ -333,22 +308,19 @@ class NonEmpty : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    NonEmpty()								= delete;
+
+    NonEmpty(NonEmpty const&) 				= default;
+    NonEmpty(NonEmpty&&) 					= default;
+    NonEmpty& operator=(NonEmpty const&)	= default;
+    NonEmpty& operator=(NonEmpty&&)			= default;
+
     ///THROWS
     NonEmpty(T&& in)
         : base(std::move(in))
     {
         if (base::data.empty())
             throw std::logic_error("Can't pass empty container to constructor of NonEmpty");
-    }
-
-    NonEmpty(NonEmpty<T> const& in)
-        : base(in)
-    {
-    }
-
-    NonEmpty(NonEmpty<T>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 
@@ -360,22 +332,19 @@ class BiggerThan : public NonEmpty<T> ///@todo rename and smaller to make clear 
     using base = NonEmpty<T>;
 
 public:
+    BiggerThan()								= delete;
+
+    BiggerThan(BiggerThan const&) 				= default;
+    BiggerThan(BiggerThan&&) 					= default;
+    BiggerThan& operator=(BiggerThan const&)	= default;
+    BiggerThan& operator=(BiggerThan&&)			= default;
+
     ///THROWS
     BiggerThan(T&& in)
         : base(std::move(in))
     {
         if (base::data.size() <= SIZE)
             throw std::logic_error("Passed too small container to constructor of BiggerThan");
-    }
-
-    BiggerThan(BiggerThan<T, SIZE> const& in)
-        : base(in)
-    {
-    }
-
-    BiggerThan(BiggerThan<T, SIZE>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 
@@ -386,22 +355,19 @@ class SmallerThan : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    SmallerThan()								= delete;
+
+    SmallerThan(SmallerThan const&) 			= default;
+    SmallerThan(SmallerThan&&) 					= default;
+    SmallerThan& operator=(SmallerThan const&)	= default;
+    SmallerThan& operator=(SmallerThan&&)		= default;
+
     ///THROWS
     SmallerThan(T&& in)
         : base(std::move(in))
     {
         if (base::data.size() >= SIZE)
             throw std::logic_error("Passed too big container to constructor of SmallerThan");
-    }
-
-    SmallerThan(SmallerThan<T, SIZE> const& in)
-        : base(in)
-    {
-    }
-
-    SmallerThan(SmallerThan<T, SIZE>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 
@@ -412,22 +378,19 @@ class FixedSized : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
+    FixedSized()								= delete;
+
+    FixedSized(FixedSized const&) 				= default;
+    FixedSized(FixedSized&&) 					= default;
+    FixedSized& operator=(FixedSized const&)	= default;
+    FixedSized& operator=(FixedSized&&)			= default;
+
     ///THROWS
     FixedSized(T&& in)
         : base(std::move(in))
     {
         if (base::data.size() != SIZE)
             throw std::logic_error("Passed container with wrong size to constructor of FixedSized");
-    }
-
-    FixedSized(FixedSized<T, SIZE> const& in)
-        : base(in)
-    {
-    }
-
-    FixedSized(FixedSized<T, SIZE>&& in)
-        : base(std::move(in.data))
-    {
     }
 };
 }
