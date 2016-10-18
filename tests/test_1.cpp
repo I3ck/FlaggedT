@@ -32,6 +32,12 @@ NonNull<std::unique_ptr<int>> safe_generator() {
 int no_need_to_check_for_null(NonNull<std::unique_ptr<int>>&& in) {
     return *(in.get().get()) + 1;
 }
+
+int add_one(int in)
+{
+    return in + 1;
+}
+
 //examples (move these to example files) [also the example test case]
 
 
@@ -48,7 +54,7 @@ TEST_CASE("FlaggedT") {
 
         int* i2 = new int(3);
         auto nn = NonNull<int*>(std::move(i2));
-        auto i2s = NonNull<int*>::unwrap(std::move(nn));
+        int* i2s = std::move(nn);
         delete i2s;
     }
 
@@ -246,5 +252,8 @@ TEST_CASE("FlaggedT") {
     SECTION("Move this to an example file") {
         auto tmp = safe_generator();
         auto res = no_need_to_check_for_null(std::move(tmp));
+
+        auto autoUnwrap = NonNegative<int>(3);
+        int result = add_one(autoUnwrap);
     }
 }

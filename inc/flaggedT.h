@@ -46,10 +46,22 @@ public:
         return data;
     }
 
+    operator T() const&
+    {
+        return data;
+    }
+
+    operator T() &&
+    {
+        return std::move(data);
+    }
+
+    /*TODO remove if working without
     static T unwrap(FlaggedTBase<T>&& in)
     {
         return in.data;
     }
+    */
 };
 
 //------------------------------------------------------------------------------

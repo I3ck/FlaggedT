@@ -1,13 +1,38 @@
 FlaggedT
 ==========
 A C++ library for type level flagging.  
-`Flagged<T>` offers multiple wrapper types which allow you to add properties to your variables at type level.    
+`Flagged<T>` offers multiple wrapper types which allow you to add properties to your variables at type level. The wrapped types can still be used as the inner type, thanks to operator overloading.  
 
 
 Examples, Tutorials
 ---------------------
 ```cpp
 using namespace flaggedT;
+```
+
+
+### Accessing the wrapped data
+
+To ensure that the type reflects the state of the wrapped data, there's only immutable access to it. Both the moving and const reference conversion operator to T are overloaded.
+This makes it possible to move the wrapped data out, or to use them via const reference.
+
+```cpp
+auto wrapped = NonNegative<int>(3); //if no exception is thrown, wrapped is now guarenteed >= 0
+int abs = easy_abs(wrapped); //using a method defined for the wrapped type
+int result = add_one(wrapped); //still able to use methods defined for the inner type
+
+int unwrapped = std::move(wrapped);
+
+int add_one(int in)
+{
+    return in + 1;
+}
+
+int easy_abs(NonNegative<int> in)
+{
+    return in.get();
+}
+
 ```
 
 ### `NonNull<T>`
@@ -146,19 +171,9 @@ void access_four(BiggerThan<std::vector<int>,3> const& in) {
 //analog to BiggerThan and SmallerThan, but enforcing an exact size
 ```
 
-### Accessing the wrapped data
-
-To ensure that the type reflects the state of the wrapped data, there's only immutable access to it.  
-```cpp
-auto wrappedExample = Sorted<...>(...); //some flagged type
-wrappedExample.get() // returns a const& to the wrapped data
-//moves ownership out of the container and destroys it
-auto inner = FlaggedTBase<...>::unwrap(std::move(wrappedExample));
-```
-
 Version
 -------
-1.1.0
+2.0.0
 
 License
 ------
