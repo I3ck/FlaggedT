@@ -22,14 +22,15 @@
 using namespace std;
 using namespace flaggedT;
 
-
 //examples (move these to example files) [also the example test case]
 //generator
-NonNull<std::unique_ptr<int>> safe_generator() {
-    return NonNull<std::unique_ptr<int>>(std::unique_ptr<int>(new int(5)));
+NonNull<std::unique_ptr<int> > safe_generator()
+{
+    return NonNull<std::unique_ptr<int> >(std::unique_ptr<int>(new int(5)));
 }
 
-int no_need_to_check_for_null(NonNull<std::unique_ptr<int>>&& in) {
+int no_need_to_check_for_null(NonNull<std::unique_ptr<int> >&& in)
+{
     return *(in.get().get()) + 1;
 }
 
@@ -40,12 +41,10 @@ int add_one(int in)
 
 //examples (move these to example files) [also the example test case]
 
-
-
-
-
-TEST_CASE("FlaggedT") {
-    SECTION("NonNull") {
+TEST_CASE("FlaggedT")
+{
+    SECTION("NonNull")
+    {
         //won't even compile, since nullptr_t overload is deleted
         //auto wontCompile = NonNull<int*>::make_non_null(nullptr);
 
@@ -58,16 +57,18 @@ TEST_CASE("FlaggedT") {
         delete i2s;
     }
 
-    SECTION("NonEmpty") {
+    SECTION("NonEmpty")
+    {
         auto emptyVec = std::vector<int>();
-        REQUIRE_THROWS(NonEmpty<std::vector<int>>(std::move(emptyVec)));
+        REQUIRE_THROWS(NonEmpty<std::vector<int> >(std::move(emptyVec)));
 
-        auto goodVec = std::vector<int>({1,2});
-        auto ne = NonEmpty<std::vector<int>>(std::move(goodVec));
+        auto goodVec = std::vector<int>({ 1, 2 });
+        auto ne = NonEmpty<std::vector<int> >(std::move(goodVec));
         REQUIRE(ne.get().size() == 2);
     }
 
-    SECTION("NonZero") {
+    SECTION("NonZero")
+    {
         int ifail = 0;
         float ffail = 0.0f;
         double dfail = 0.0;
@@ -89,7 +90,8 @@ TEST_CASE("FlaggedT") {
         REQUIRE(d.get() == 1.0);
     }
 
-    SECTION("Positive") {
+    SECTION("Positive")
+    {
         int ifail = -1;
         float ffail = -1.0f;
         double dfail = -1.0;
@@ -119,7 +121,8 @@ TEST_CASE("FlaggedT") {
         REQUIRE(d.get() == 1.0);
     }
 
-    SECTION("NonPositive") {
+    SECTION("NonPositive")
+    {
         int ifail = 1;
         float ffail = 1.0f;
         double dfail = 1.0;
@@ -141,7 +144,8 @@ TEST_CASE("FlaggedT") {
         REQUIRE(d.get() == -1.0);
     }
 
-    SECTION("Negative") {
+    SECTION("Negative")
+    {
         int ifail = 1;
         float ffail = 1.0f;
         double dfail = 1.0;
@@ -171,7 +175,8 @@ TEST_CASE("FlaggedT") {
         REQUIRE(d.get() == -1.0);
     }
 
-    SECTION("NonNegative") {
+    SECTION("NonNegative")
+    {
         int ifail = -1;
         float ffail = -1.0f;
         double dfail = -1.0;
@@ -193,31 +198,34 @@ TEST_CASE("FlaggedT") {
         REQUIRE(d.get() == 1.0);
     }
 
-    SECTION("BiggerThan") {
-        auto tooSmall = std::vector<int>({1,2,3});
-        using bigger3 = BiggerThan<std::vector<int>,3>;
+    SECTION("BiggerThan")
+    {
+        auto tooSmall = std::vector<int>({ 1, 2, 3 });
+        using bigger3 = BiggerThan<std::vector<int>, 3>;
         REQUIRE_THROWS(bigger3(std::move(tooSmall)));
 
-        auto bigEnough = std::vector<int>({1,2,3,4});
+        auto bigEnough = std::vector<int>({ 1, 2, 3, 4 });
         auto works = bigger3(std::move(bigEnough));
         REQUIRE(works.get().size() == 4);
     }
 
-    SECTION("SmallerThan") {
-        auto tooBig = std::vector<int>({1,2,3});
-        using smaller3 = SmallerThan<std::vector<int>,3>;
+    SECTION("SmallerThan")
+    {
+        auto tooBig = std::vector<int>({ 1, 2, 3 });
+        using smaller3 = SmallerThan<std::vector<int>, 3>;
         REQUIRE_THROWS(smaller3(std::move(tooBig)));
 
-        auto smallEnough = std::vector<int>({1,2});
+        auto smallEnough = std::vector<int>({ 1, 2 });
         auto works = smaller3(std::move(smallEnough));
         REQUIRE(works.get().size() == 2);
     }
 
-    SECTION("FixedSized") {
-        auto tooBig 	= std::vector<int>({1,2,3});
-        auto tooSmall 	= std::vector<int>({1});
-        auto correct	= std::vector<int>({1,2});
-        using fixed2 	= FixedSized<std::vector<int>,2>;
+    SECTION("FixedSized")
+    {
+        auto tooBig = std::vector<int>({ 1, 2, 3 });
+        auto tooSmall = std::vector<int>({ 1 });
+        auto correct = std::vector<int>({ 1, 2 });
+        using fixed2 = FixedSized<std::vector<int>, 2>;
         REQUIRE_THROWS(fixed2(std::move(tooBig)));
         REQUIRE_THROWS(fixed2(std::move(tooSmall)));
 
@@ -225,31 +233,35 @@ TEST_CASE("FlaggedT") {
         REQUIRE(works.get().size() == 2);
     }
 
-    SECTION("Sorted") {
-        std::vector<int> unsorted({1,7,8,14,3});
+    SECTION("Sorted")
+    {
+        std::vector<int> unsorted({ 1, 7, 8, 14, 3 });
 
         REQUIRE(!std::is_sorted(unsorted.begin(), unsorted.end()));
 
-        auto sorted = Sorted<std::vector<int>>(std::move(unsorted));
+        auto sorted = Sorted<std::vector<int> >(std::move(unsorted));
         REQUIRE(std::is_sorted(sorted.get().begin(), sorted.get().end()));
     }
 
-    SECTION("UNIQUE") {
-        std::vector<int> duped({1,1,2,2,3,3,7,9,11});
+    SECTION("UNIQUE")
+    {
+        std::vector<int> duped({ 1, 1, 2, 2, 3, 3, 7, 9, 11 });
 
-        auto unduped = Unique<std::vector<int>>(std::move(duped));
+        auto unduped = Unique<std::vector<int> >(std::move(duped));
         REQUIRE(unduped.get().size() == 6);
     }
 
-    SECTION("UNIQUESORTED") {
-        std::vector<int> dupedUnsorted({11,9,7,3,3,2,2,1,1});
+    SECTION("UNIQUESORTED")
+    {
+        std::vector<int> dupedUnsorted({ 11, 9, 7, 3, 3, 2, 2, 1, 1 });
 
-        auto fixed = UniqueAndSorted<std::vector<int>>(std::move(dupedUnsorted));
+        auto fixed = UniqueAndSorted<std::vector<int> >(std::move(dupedUnsorted));
         REQUIRE(std::is_sorted(fixed.get().begin(), fixed.get().end()));
         REQUIRE(fixed.get().size() == 6);
     }
 
-    SECTION("Move this to an example file") {
+    SECTION("Move this to an example file")
+    {
         auto tmp = safe_generator();
         auto res = no_need_to_check_for_null(std::move(tmp));
 

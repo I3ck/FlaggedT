@@ -21,12 +21,12 @@ namespace flaggedT {
 template <typename T>
 class FlaggedTBase {
 protected:
-    FlaggedTBase()									= delete;
+    FlaggedTBase() = delete;
 
-    FlaggedTBase(FlaggedTBase const&) 				= default;
-    FlaggedTBase(FlaggedTBase&&) 					= default;
-    FlaggedTBase& operator=(FlaggedTBase const&)	= default;
-    FlaggedTBase& operator=(FlaggedTBase&&)			= default;
+    FlaggedTBase(FlaggedTBase const&) = default;
+    FlaggedTBase(FlaggedTBase&&) = default;
+    FlaggedTBase& operator=(FlaggedTBase const&) = default;
+    FlaggedTBase& operator=(FlaggedTBase&&) = default;
 
     T data;
 
@@ -55,13 +55,6 @@ public:
     {
         return std::move(data);
     }
-
-    /*TODO remove if working without
-    static T unwrap(FlaggedTBase<T>&& in)
-    {
-        return in.data;
-    }
-    */
 };
 
 //------------------------------------------------------------------------------
@@ -71,13 +64,13 @@ class NonNull : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    NonNull()							= delete;
-    NonNull(nullptr_t) 					= delete;
+    NonNull() = delete;
+    NonNull(nullptr_t) = delete;
 
-    NonNull(NonNull const&) 			= default;
-    NonNull(NonNull&&) 					= default;
-    NonNull& operator=(NonNull const&) 	= default;
-    NonNull& operator=(NonNull&&)		= default;
+    NonNull(NonNull const&) = default;
+    NonNull(NonNull&&) = default;
+    NonNull& operator=(NonNull const&) = default;
+    NonNull& operator=(NonNull&&) = default;
 
     ///THROWS
     NonNull(T&& in)
@@ -86,7 +79,6 @@ public:
         if (nullptr == base::data)
             throw std::logic_error("Can't pass nullptr to constructor of NonNull");
     }
-
 };
 
 //------------------------------------------------------------------------------
@@ -96,12 +88,12 @@ class Sorted : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    Sorted()							= delete;
+    Sorted() = delete;
 
-    Sorted(Sorted const&) 				= default;
-    Sorted(Sorted&&) 					= default;
-    Sorted& operator=(Sorted const&)	= default;
-    Sorted& operator=(Sorted&&)			= default;
+    Sorted(Sorted const&) = default;
+    Sorted(Sorted&&) = default;
+    Sorted& operator=(Sorted const&) = default;
+    Sorted& operator=(Sorted&&) = default;
 
     Sorted(T&& in)
         : base(std::move(in))
@@ -117,12 +109,12 @@ class Shuffled : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    Shuffled()								= delete;
+    Shuffled() = delete;
 
-    Shuffled(Shuffled const&) 				= default;
-    Shuffled(Shuffled&&) 					= default;
-    Shuffled& operator=(Shuffled const&)	= default;
-    Shuffled& operator=(Shuffled&&)			= default;
+    Shuffled(Shuffled const&) = default;
+    Shuffled(Shuffled&&) = default;
+    Shuffled& operator=(Shuffled const&) = default;
+    Shuffled& operator=(Shuffled&&) = default;
 
     Shuffled(T&& in)
         : base(std::move(in))
@@ -138,12 +130,12 @@ class Unique : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    Unique()							= delete;
+    Unique() = delete;
 
-    Unique(Unique const&) 				= default;
-    Unique(Unique&&) 					= default;
-    Unique& operator=(Unique const&)	= default;
-    Unique& operator=(Unique&&)			= default;
+    Unique(Unique const&) = default;
+    Unique(Unique&&) = default;
+    Unique& operator=(Unique const&) = default;
+    Unique& operator=(Unique&&) = default;
 
     Unique(T&& in)
         : base(std::move(in))
@@ -167,12 +159,12 @@ class UniqueAndSorted : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    UniqueAndSorted()									= delete;
+    UniqueAndSorted() = delete;
 
-    UniqueAndSorted(UniqueAndSorted const&) 			= default;
-    UniqueAndSorted(UniqueAndSorted&&) 					= default;
-    UniqueAndSorted& operator=(UniqueAndSorted const&)	= default;
-    UniqueAndSorted& operator=(UniqueAndSorted&&)		= default;
+    UniqueAndSorted(UniqueAndSorted const&) = default;
+    UniqueAndSorted(UniqueAndSorted&&) = default;
+    UniqueAndSorted& operator=(UniqueAndSorted const&) = default;
+    UniqueAndSorted& operator=(UniqueAndSorted&&) = default;
 
     UniqueAndSorted(T&& in)
         : base(std::move(in))
@@ -209,12 +201,12 @@ class NonZero : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    NonZero()							= delete;
+    NonZero() = delete;
 
-    NonZero(NonZero const&) 			= default;
-    NonZero(NonZero&&) 					= default;
-    NonZero& operator=(NonZero const&)	= default;
-    NonZero& operator=(NonZero&&)		= default;
+    NonZero(NonZero const&) = default;
+    NonZero(NonZero&&) = default;
+    NonZero& operator=(NonZero const&) = default;
+    NonZero& operator=(NonZero&&) = default;
 
     ///THROWS
     NonZero(T&& in)
@@ -232,12 +224,12 @@ class Positive : public NonZero<T> {
     using base = NonZero<T>;
 
 public:
-    Positive()								= delete;
+    Positive() = delete;
 
-    Positive(Positive const&) 				= default;
-    Positive(Positive&&) 					= default;
-    Positive& operator=(Positive const&)	= default;
-    Positive& operator=(Positive&&)			= default;
+    Positive(Positive const&) = default;
+    Positive(Positive&&) = default;
+    Positive& operator=(Positive const&) = default;
+    Positive& operator=(Positive&&) = default;
 
     ///THROWS
     Positive(T&& in)
@@ -253,12 +245,12 @@ class NonPositive : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    NonPositive()								= delete;
+    NonPositive() = delete;
 
-    NonPositive(NonPositive const&) 			= default;
-    NonPositive(NonPositive&&) 					= default;
-    NonPositive& operator=(NonPositive const&)	= default;
-    NonPositive& operator=(NonPositive&&)		= default;
+    NonPositive(NonPositive const&) = default;
+    NonPositive(NonPositive&&) = default;
+    NonPositive& operator=(NonPositive const&) = default;
+    NonPositive& operator=(NonPositive&&) = default;
 
     ///THROWS
     NonPositive(T&& in)
@@ -276,12 +268,12 @@ class Negative : public NonZero<T> {
     using base = NonZero<T>;
 
 public:
-    Negative()								= delete;
+    Negative() = delete;
 
-    Negative(Negative const&) 				= default;
-    Negative(Negative&&) 					= default;
-    Negative& operator=(Negative const&)	= default;
-    Negative& operator=(Negative&&)			= default;
+    Negative(Negative const&) = default;
+    Negative(Negative&&) = default;
+    Negative& operator=(Negative const&) = default;
+    Negative& operator=(Negative&&) = default;
 
     ///THROWS
     Negative(T&& in)
@@ -297,12 +289,12 @@ class NonNegative : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    NonNegative()								= delete;
+    NonNegative() = delete;
 
-    NonNegative(NonNegative const&) 			= default;
-    NonNegative(NonNegative&&) 					= default;
-    NonNegative& operator=(NonNegative const&)	= default;
-    NonNegative& operator=(NonNegative&&)		= default;
+    NonNegative(NonNegative const&) = default;
+    NonNegative(NonNegative&&) = default;
+    NonNegative& operator=(NonNegative const&) = default;
+    NonNegative& operator=(NonNegative&&) = default;
 
     ///THROWS
     NonNegative(T&& in)
@@ -320,12 +312,12 @@ class NonEmpty : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    NonEmpty()								= delete;
+    NonEmpty() = delete;
 
-    NonEmpty(NonEmpty const&) 				= default;
-    NonEmpty(NonEmpty&&) 					= default;
-    NonEmpty& operator=(NonEmpty const&)	= default;
-    NonEmpty& operator=(NonEmpty&&)			= default;
+    NonEmpty(NonEmpty const&) = default;
+    NonEmpty(NonEmpty&&) = default;
+    NonEmpty& operator=(NonEmpty const&) = default;
+    NonEmpty& operator=(NonEmpty&&) = default;
 
     ///THROWS
     NonEmpty(T&& in)
@@ -344,12 +336,12 @@ class BiggerThan : public NonEmpty<T> ///@todo rename and smaller to make clear 
     using base = NonEmpty<T>;
 
 public:
-    BiggerThan()								= delete;
+    BiggerThan() = delete;
 
-    BiggerThan(BiggerThan const&) 				= default;
-    BiggerThan(BiggerThan&&) 					= default;
-    BiggerThan& operator=(BiggerThan const&)	= default;
-    BiggerThan& operator=(BiggerThan&&)			= default;
+    BiggerThan(BiggerThan const&) = default;
+    BiggerThan(BiggerThan&&) = default;
+    BiggerThan& operator=(BiggerThan const&) = default;
+    BiggerThan& operator=(BiggerThan&&) = default;
 
     ///THROWS
     BiggerThan(T&& in)
@@ -367,12 +359,12 @@ class SmallerThan : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    SmallerThan()								= delete;
+    SmallerThan() = delete;
 
-    SmallerThan(SmallerThan const&) 			= default;
-    SmallerThan(SmallerThan&&) 					= default;
-    SmallerThan& operator=(SmallerThan const&)	= default;
-    SmallerThan& operator=(SmallerThan&&)		= default;
+    SmallerThan(SmallerThan const&) = default;
+    SmallerThan(SmallerThan&&) = default;
+    SmallerThan& operator=(SmallerThan const&) = default;
+    SmallerThan& operator=(SmallerThan&&) = default;
 
     ///THROWS
     SmallerThan(T&& in)
@@ -390,12 +382,12 @@ class FixedSized : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    FixedSized()								= delete;
+    FixedSized() = delete;
 
-    FixedSized(FixedSized const&) 				= default;
-    FixedSized(FixedSized&&) 					= default;
-    FixedSized& operator=(FixedSized const&)	= default;
-    FixedSized& operator=(FixedSized&&)			= default;
+    FixedSized(FixedSized const&) = default;
+    FixedSized(FixedSized&&) = default;
+    FixedSized& operator=(FixedSized const&) = default;
+    FixedSized& operator=(FixedSized&&) = default;
 
     ///THROWS
     FixedSized(T&& in)
