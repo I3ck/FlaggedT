@@ -173,7 +173,7 @@ void access_four(BiggerThan<std::vector<int>,3> const& in) {
 
 Version
 -------
-2.0.0
+2.0.1
 
 License
 ------

@@ -41,17 +41,17 @@ protected:
     }
 
 public:
-    T const& get()
+    T const& get() const
     {
         return data;
     }
 
-    operator T() const&
+    operator T const& () const
     {
         return data;
     }
 
-    operator T() &&
+    operator T&& ()
     {
         return std::move(data);
     }
