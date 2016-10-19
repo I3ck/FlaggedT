@@ -130,6 +130,11 @@ void safe_div(int nominator, NonZero<int> const& denominator) {
 //T >= 0
 ```
 
+### `Bounded<T, T MIN, T MAX>`
+```cpp
+//T > MIN && T < MAX
+```
+
 ### `NonEmpty<T>`
 ```cpp
 auto emptyVec = std::vector<int>();
@@ -173,7 +178,7 @@ void access_four(BiggerThan<std::vector<int>,3> const& in) {
 
 Version
 -------
-2.0.1
+2.1.0
 
 License
 ------

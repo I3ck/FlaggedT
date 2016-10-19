@@ -198,6 +198,19 @@ TEST_CASE("FlaggedT")
         REQUIRE(d.get() == 1.0);
     }
 
+    SECTION("Bounded") {
+        constexpr int iMin = 3;
+        constexpr int iMax = 5;
+        using iBounded = Bounded<int, iMin, iMax>;
+        int ifail = 2;
+        int iworks = 4;
+
+        REQUIRE_THROWS(iBounded(std::move(ifail)));
+
+        auto i = iBounded(std::move(iworks));
+        REQUIRE(i.get() == 4);
+    }
+
     SECTION("BiggerThan")
     {
         auto tooSmall = std::vector<int>({ 1, 2, 3 });

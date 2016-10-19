@@ -307,6 +307,31 @@ public:
 
 //------------------------------------------------------------------------------
 
+template <typename T, T MIN, T MAX>
+class Bounded : public FlaggedTBase<T> {
+    using base = FlaggedTBase<T>;
+
+public:
+    Bounded() = delete;
+
+    Bounded(Bounded const&) = default;
+    Bounded(Bounded&&) = default;
+    Bounded& operator=(Bounded const&) = default;
+    Bounded& operator=(Bounded&&) = default;
+
+    ///THROWS
+    Bounded(T&& in)
+        : base(std::move(in))
+    {
+        if (base::data < MIN)
+            throw std::logic_error("Passed value to constructor of Bounded is too small");
+        if (base::data > MAX)
+            throw std::logic_error("Passed value to constructor of Bounded is too big");
+    }
+};
+
+//------------------------------------------------------------------------------
+
 template <typename T>
 class NonEmpty : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
