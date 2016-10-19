@@ -356,47 +356,47 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T, std::size_t SIZE>
-class BiggerThan : public NonEmpty<T> ///@todo rename and smaller to make clear it's about containers
+class MoreThan : public NonEmpty<T>
 {
     using base = NonEmpty<T>;
 
 public:
-    BiggerThan() = delete;
+    MoreThan() = delete;
 
-    BiggerThan(BiggerThan const&) = default;
-    BiggerThan(BiggerThan&&) = default;
-    BiggerThan& operator=(BiggerThan const&) = default;
-    BiggerThan& operator=(BiggerThan&&) = default;
+    MoreThan(MoreThan const&) = default;
+    MoreThan(MoreThan&&) = default;
+    MoreThan& operator=(MoreThan const&) = default;
+    MoreThan& operator=(MoreThan&&) = default;
 
     ///THROWS
-    BiggerThan(T&& in)
+    MoreThan(T&& in)
         : base(std::move(in))
     {
         if (base::data.size() <= SIZE)
-            throw std::logic_error("Passed too small container to constructor of BiggerThan");
+            throw std::logic_error("Passed too small container to constructor of MoreThan");
     }
 };
 
 //------------------------------------------------------------------------------
 
 template <typename T, std::size_t SIZE>
-class SmallerThan : public FlaggedTBase<T> {
+class LessThan : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    SmallerThan() = delete;
+    LessThan() = delete;
 
-    SmallerThan(SmallerThan const&) = default;
-    SmallerThan(SmallerThan&&) = default;
-    SmallerThan& operator=(SmallerThan const&) = default;
-    SmallerThan& operator=(SmallerThan&&) = default;
+    LessThan(LessThan const&) = default;
+    LessThan(LessThan&&) = default;
+    LessThan& operator=(LessThan const&) = default;
+    LessThan& operator=(LessThan&&) = default;
 
     ///THROWS
-    SmallerThan(T&& in)
+    LessThan(T&& in)
         : base(std::move(in))
     {
         if (base::data.size() >= SIZE)
-            throw std::logic_error("Passed too big container to constructor of SmallerThan");
+            throw std::logic_error("Passed too big container to constructor of LessThan");
     }
 };
 

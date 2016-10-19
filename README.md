@@ -149,16 +149,16 @@ void access_first(NonEmpty<std::vector<int>> const& in) {
 }
 ```
 
-### `BiggerThan<T,SIZE> : NonEmpty<T>`
+### `MoreThan<T,SIZE> : NonEmpty<T>`
 ```cpp
 auto tooSmall = std::vector<int>({1,2,3});
-auto throwsException = BiggerThan<std::vector<int>,3>(std::move(tooSmall)); //Exception
+auto throwsException = MoreThan<std::vector<int>,3>(std::move(tooSmall)); //Exception
 
 auto bigEnough = std::vector<int>({1,2,3,4});
-auto works = BiggerThan<std::vector<int>,3>(std::move(bigEnough));
+auto works = MoreThan<std::vector<int>,3>(std::move(bigEnough));
 
 //Methods now can access the first SIZE-elements without checking the size
-void access_four(BiggerThan<std::vector<int>,3> const& in) {
+void access_four(MoreThan<std::vector<int>,3> const& in) {
     auto first = in.get()[0]; //this will always work
     auto second = in.get()[1]; //this will always work
     auto third = in.get()[2]; //this will always work
@@ -166,19 +166,19 @@ void access_four(BiggerThan<std::vector<int>,3> const& in) {
 }
 ```
 
-### `SmallerThan<T,SIZE>`
+### `LessThan<T,SIZE>`
 ```cpp
-//analog to BiggerThan, but forcing the size to be smaller than SIZE
+//analog to MoreThan, but forcing the size to be smaller than SIZE
 ```
 
 ### `FixedSized<T,SIZE>`
 ```cpp
-//analog to BiggerThan and SmallerThan, but enforcing an exact size
+//analog to MoreThan and LessThan, but enforcing an exact size
 ```
 
 Version
 -------
-2.1.0
+2.2.0
 
 License
 ------

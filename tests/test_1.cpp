@@ -211,25 +211,25 @@ TEST_CASE("FlaggedT")
         REQUIRE(i.get() == 4);
     }
 
-    SECTION("BiggerThan")
+    SECTION("MoreThan")
     {
         auto tooSmall = std::vector<int>({ 1, 2, 3 });
-        using bigger3 = BiggerThan<std::vector<int>, 3>;
-        REQUIRE_THROWS(bigger3(std::move(tooSmall)));
+        using more3 = MoreThan<std::vector<int>, 3>;
+        REQUIRE_THROWS(more3(std::move(tooSmall)));
 
         auto bigEnough = std::vector<int>({ 1, 2, 3, 4 });
-        auto works = bigger3(std::move(bigEnough));
+        auto works = more3(std::move(bigEnough));
         REQUIRE(works.get().size() == 4);
     }
 
-    SECTION("SmallerThan")
+    SECTION("LessThan")
     {
         auto tooBig = std::vector<int>({ 1, 2, 3 });
-        using smaller3 = SmallerThan<std::vector<int>, 3>;
-        REQUIRE_THROWS(smaller3(std::move(tooBig)));
+        using less3 = LessThan<std::vector<int>, 3>;
+        REQUIRE_THROWS(less3(std::move(tooBig)));
 
         auto smallEnough = std::vector<int>({ 1, 2 });
-        auto works = smaller3(std::move(smallEnough));
+        auto works = less3(std::move(smallEnough));
         REQUIRE(works.get().size() == 2);
     }
 
