@@ -307,6 +307,94 @@ public:
 
 //------------------------------------------------------------------------------
 
+template <typename T, T MAX>
+class CeiledInclusive : public FlaggedTBase<T> {
+    using base = FlaggedTBase<T>;
+
+public:
+    CeiledInclusive() = delete;
+
+    CeiledInclusive(CeiledInclusive const&) = default;
+    CeiledInclusive(CeiledInclusive&&) = default;
+    CeiledInclusive& operator=(CeiledInclusive const&) = default;
+    CeiledInclusive& operator=(CeiledInclusive&&) = default;
+
+    ///THROWS
+    CeiledInclusive(T&& in)
+        : base(std::move(in))
+    {
+        if (base::data > MAX)
+            throw std::logic_error("Passed value to constructor of CeiledInclusive is too big");
+    }
+};
+
+template <typename T, T MAX>
+class CeiledExclusive : public FlaggedTBase<T> {
+    using base = FlaggedTBase<T>;
+
+public:
+    CeiledExclusive() = delete;
+
+    CeiledExclusive(CeiledExclusive const&) = default;
+    CeiledExclusive(CeiledExclusive&&) = default;
+    CeiledExclusive& operator=(CeiledExclusive const&) = default;
+    CeiledExclusive& operator=(CeiledExclusive&&) = default;
+
+    ///THROWS
+    CeiledExclusive(T&& in)
+        : base(std::move(in))
+    {
+        if (base::data >= MAX)
+            throw std::logic_error("Passed value to constructor of CeiledExclusive is too big");
+    }
+};
+
+//------------------------------------------------------------------------------
+
+template <typename T, T MIN>
+class FlooredInclusive : public FlaggedTBase<T> {
+    using base = FlaggedTBase<T>;
+
+public:
+    FlooredInclusive() = delete;
+
+    FlooredInclusive(FlooredInclusive const&) = default;
+    FlooredInclusive(FlooredInclusive&&) = default;
+    FlooredInclusive& operator=(FlooredInclusive const&) = default;
+    FlooredInclusive& operator=(FlooredInclusive&&) = default;
+
+    ///THROWS
+    FlooredInclusive(T&& in)
+        : base(std::move(in))
+    {
+        if (base::data < MIN)
+            throw std::logic_error("Passed value to constructor of FlooredInclusive is too small");
+    }
+};
+
+template <typename T, T MIN>
+class FlooredExclusive : public FlaggedTBase<T> {
+    using base = FlaggedTBase<T>;
+
+public:
+    FlooredExclusive() = delete;
+
+    FlooredExclusive(FlooredExclusive const&) = default;
+    FlooredExclusive(FlooredExclusive&&) = default;
+    FlooredExclusive& operator=(FlooredExclusive const&) = default;
+    FlooredExclusive& operator=(FlooredExclusive&&) = default;
+
+    ///THROWS
+    FlooredExclusive(T&& in)
+        : base(std::move(in))
+    {
+        if (base::data <= MIN)
+            throw std::logic_error("Passed value to constructor of FlooredExclusive is too small");
+    }
+};
+
+//------------------------------------------------------------------------------
+
 template <typename T, T MIN, T MAX>
 class Bounded : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;

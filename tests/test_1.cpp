@@ -198,6 +198,34 @@ TEST_CASE("FlaggedT")
         REQUIRE(d.get() == 1.0);
     }
 
+    SECTION("Ceiled") {
+        constexpr int iMax = 5;
+        using iCeiledIncl = CeiledInclusive<int, iMax>;
+        using iCeiledExcl = CeiledExclusive<int, iMax>;
+
+        REQUIRE_THROWS(iCeiledIncl(6));
+        auto incl = iCeiledIncl(5);
+        REQUIRE(incl.get() == 5);
+
+        REQUIRE_THROWS(iCeiledExcl(5));
+        auto excl = iCeiledExcl(4);
+        REQUIRE(excl.get() == 4);
+    }
+
+    SECTION("Floored") {
+        constexpr int iMin = 2;
+        using iFlooredIncl = FlooredInclusive<int, iMin>;
+        using iFlooredExcl = FlooredExclusive<int, iMin>;
+
+        REQUIRE_THROWS(iFlooredIncl(1));
+        auto incl = iFlooredIncl(2);
+        REQUIRE(incl.get() == 2);
+
+        REQUIRE_THROWS(iFlooredExcl(2));
+        auto excl = iFlooredExcl(3);
+        REQUIRE(excl.get() == 3);
+    }
+
     SECTION("Bounded") {
         constexpr int iMin = 3;
         constexpr int iMax = 5;

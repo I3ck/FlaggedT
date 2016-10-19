@@ -130,6 +130,26 @@ void safe_div(int nominator, NonZero<int> const& denominator) {
 //T >= 0
 ```
 
+### `CeiledInclusive<T, T MAX>`
+```cpp
+//T <= MAX
+```
+
+### `CeiledExclusive<T, T MAX>`
+```cpp
+//T < MAX
+```
+
+### `FlooredInclusive<T, T MIN>`
+```cpp
+//T >= MIN
+```
+
+### `FlooredExclusive<T, T MIN>`
+```cpp
+//T > MIN
+```
+
 ### `Bounded<T, T MIN, T MAX>`
 ```cpp
 //T > MIN && T < MAX
@@ -178,7 +198,7 @@ void access_four(MoreThan<std::vector<int>,3> const& in) {
 
 Version
 -------
-2.2.0
+2.2.1
 
 License
 ------
