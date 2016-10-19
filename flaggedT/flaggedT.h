@@ -533,6 +533,32 @@ public:
             throw std::logic_error("Passed container with wrong size to constructor of FixedSized");
     }
 };
+
+//------------------------------------------------------------------------------
+
+template <typename T, std::size_t MINSIZE, std::size_t MAXSIZE>
+class FixedRangeInclusive : public FlaggedTBase<T> {
+    using base = FlaggedTBase<T>;
+
+public:
+    FixedRangeInclusive() = delete;
+
+    FixedRangeInclusive(FixedRangeInclusive const&) = default;
+    FixedRangeInclusive(FixedRangeInclusive&&) = default;
+    FixedRangeInclusive& operator=(FixedRangeInclusive const&) = default;
+    FixedRangeInclusive& operator=(FixedRangeInclusive&&) = default;
+
+    ///THROWS
+    FixedRangeInclusive(T&& in)
+        : base(std::move(in))
+    {
+        const auto n = base::data.size();
+        if (n < MINSIZE)
+            throw std::logic_error("Passed too small container to constructor of FixedRangeInclusive");
+        if (n > MAXSIZE)
+            throw std::logic_error("Passed too big container to constructor of FixedRangeInclusive");
+    }
+};
 }
 
 #endif // FLAGGEDT_H

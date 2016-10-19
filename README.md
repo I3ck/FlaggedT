@@ -193,17 +193,25 @@ void access_four(MoreThan<std::vector<int>,3> const& in) {
 
 ### `LessThan<T,SIZE>`
 ```cpp
-//analog to MoreThan, but forcing the size to be smaller than SIZE
+//analog to MoreThan
+//T.size() < SIZE
 ```
 
 ### `FixedSized<T,SIZE>`
 ```cpp
 //analog to MoreThan and LessThan, but enforcing an exact size
+//T.size() == SIZE
+```
+
+### `FixedRangeInclusive<T,MINSIZE,MAXSIZE>`
+```cpp
+//analog to MoreThan and LessThan, but enforcing a size range
+//T.size() >= MINSIZE && T.size() <= MAXSIZE
 ```
 
 Version
 -------
-2.3.0
+2.3.1
 
 License
 ------

@@ -244,7 +244,7 @@ TEST_CASE("FlaggedT")
         REQUIRE_THROWS(iBoundedExcl(3));
         REQUIRE_THROWS(iBoundedExcl(5));
 
-        auto excl = iBoundedIncl(4);
+        auto excl = iBoundedExcl(4);
         REQUIRE(excl.get() == 4);
     }
 
@@ -281,6 +281,23 @@ TEST_CASE("FlaggedT")
 
         auto works = fixed2(std::move(correct));
         REQUIRE(works.get().size() == 2);
+    }
+
+    SECTION("FixedRange")
+    {
+        constexpr size_t nMin = 3;
+        constexpr size_t nMax = 5;
+
+        using rangedIncl = FixedRangeInclusive<std::vector<int>, nMin, nMax>;
+
+        REQUIRE_THROWS(rangedIncl({1,2}));
+        REQUIRE_THROWS(rangedIncl({1,2,3,4,5,6}));
+
+        auto incl1 = rangedIncl({1,2,3});
+        REQUIRE(incl1.get().size() == 3);
+
+        auto incl2 = rangedIncl({1,2,3,4,5});
+        REQUIRE(incl2.get().size() == 5);
     }
 
     SECTION("Sorted")
