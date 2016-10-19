@@ -14,7 +14,7 @@ using namespace flaggedT;
 ### Accessing the wrapped data
 
 To ensure that the type reflects the state of the wrapped data, there's only immutable access to it. Both the moving and const reference conversion operator to T are overloaded.
-This makes it possible to move the wrapped data out, or to use them via const reference.
+This makes it possible to move the wrapped data out, or to use it via const reference.
 
 ```cpp
 auto wrapped = NonNegative<int>(3); //if no exception is thrown, wrapped is now guarenteed >= 0
