@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -Wall -Wextra -O3")
 set(CMAKE_EXE_LINKER_FLAGS "-lpthread")
 
 include_directories(
-        inc/
+        flaggedT/
 )
 
 add_executable(
