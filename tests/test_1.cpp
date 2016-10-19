@@ -229,14 +229,23 @@ TEST_CASE("FlaggedT")
     SECTION("Bounded") {
         constexpr int iMin = 3;
         constexpr int iMax = 5;
-        using iBounded = Bounded<int, iMin, iMax>;
-        int ifail = 2;
-        int iworks = 4;
+        using iBoundedIncl = BoundedInclusive<int, iMin, iMax>;
+        using iBoundedExcl = BoundedExclusive<int, iMin, iMax>;
 
-        REQUIRE_THROWS(iBounded(std::move(ifail)));
+        REQUIRE_THROWS(iBoundedIncl(2));
+        REQUIRE_THROWS(iBoundedIncl(6));
 
-        auto i = iBounded(std::move(iworks));
-        REQUIRE(i.get() == 4);
+        auto incl1 = iBoundedIncl(3);
+        REQUIRE(incl1.get() == 3);
+
+        auto incl2 = iBoundedIncl(5);
+        REQUIRE(incl2.get() == 5);
+
+        REQUIRE_THROWS(iBoundedExcl(3));
+        REQUIRE_THROWS(iBoundedExcl(5));
+
+        auto excl = iBoundedIncl(4);
+        REQUIRE(excl.get() == 4);
     }
 
     SECTION("MoreThan")

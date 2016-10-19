@@ -396,25 +396,48 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T, T MIN, T MAX>
-class Bounded : public FlaggedTBase<T> {
+class BoundedInclusive : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
 public:
-    Bounded() = delete;
+    BoundedInclusive() = delete;
 
-    Bounded(Bounded const&) = default;
-    Bounded(Bounded&&) = default;
-    Bounded& operator=(Bounded const&) = default;
-    Bounded& operator=(Bounded&&) = default;
+    BoundedInclusive(BoundedInclusive const&) = default;
+    BoundedInclusive(BoundedInclusive&&) = default;
+    BoundedInclusive& operator=(BoundedInclusive const&) = default;
+    BoundedInclusive& operator=(BoundedInclusive&&) = default;
 
     ///THROWS
-    Bounded(T&& in)
+    BoundedInclusive(T&& in)
         : base(std::move(in))
     {
         if (base::data < MIN)
-            throw std::logic_error("Passed value to constructor of Bounded is too small");
+            throw std::logic_error("Passed value to constructor of BoundedInclusive is too small");
         if (base::data > MAX)
-            throw std::logic_error("Passed value to constructor of Bounded is too big");
+            throw std::logic_error("Passed value to constructor of BoundedInclusive is too big");
+    }
+};
+
+template <typename T, T MIN, T MAX>
+class BoundedExclusive : public FlaggedTBase<T> {
+    using base = FlaggedTBase<T>;
+
+public:
+    BoundedExclusive() = delete;
+
+    BoundedExclusive(BoundedExclusive const&) = default;
+    BoundedExclusive(BoundedExclusive&&) = default;
+    BoundedExclusive& operator=(BoundedExclusive const&) = default;
+    BoundedExclusive& operator=(BoundedExclusive&&) = default;
+
+    ///THROWS
+    BoundedExclusive(T&& in)
+        : base(std::move(in))
+    {
+        if (base::data <= MIN)
+            throw std::logic_error("Passed value to constructor of BoundedExclusive is too small");
+        if (base::data >= MAX)
+            throw std::logic_error("Passed value to constructor of BoundedExclusive is too big");
     }
 };
 
