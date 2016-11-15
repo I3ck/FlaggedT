@@ -1,3 +1,6 @@
 reverse sorted
 define more combined types
 custom sorting predicate ?
+
+allow construction from more restrictive types
+e.g. GreaterThan<T> can be built from all GreaterThan<t+1>
