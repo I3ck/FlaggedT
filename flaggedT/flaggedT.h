@@ -60,6 +60,34 @@ public:
 //------------------------------------------------------------------------------
 
 template <typename T>
+class Immutable final : public FlaggedTBase<T> {
+    using base = FlaggedTBase<T>;
+public:
+
+    Immutable(T const& in)
+        : base(in)
+    {
+    }
+
+    Immutable(T&& in)
+        : base(std::move(in))
+    {
+    }
+    Immutable() = delete;
+
+    Immutable(Immutable const&) = default;
+    Immutable(Immutable &&) = default;
+    Immutable& operator=(Immutable const&) = default;
+    Immutable& operator=(Immutable &&) = default;
+};
+
+template <typename T>
+using shared_im = std::shared_ptr<Immutable<T>>; ///@todo implement directly (currently required to get().get() and make_shared is rather bad)
+///@todo make_shared_im or similar
+
+//------------------------------------------------------------------------------
+
+template <typename T>
 class NonNull : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 

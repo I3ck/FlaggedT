@@ -43,6 +43,22 @@ int add_one(int in)
 
 TEST_CASE("FlaggedT")
 {
+    SECTION("Immutable")
+    {
+        auto im = Immutable<int>(3);
+
+        int copied = im;
+
+        //ref not allowed
+        //int& ref = im;
+
+        int const& cref = im;
+
+        shared_im<int> safe_sharing;
+
+        safe_sharing = make_shared<Immutable<int>>(4);
+    }
+
     SECTION("NonNull")
     {
         //won't even compile, since nullptr_t overload is deleted
