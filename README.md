@@ -239,7 +239,7 @@ void access_four(MoreThan<std::vector<int>,3> const& in) {
 
 Version
 -------
-2.3.1
+2.4.0
 
 License
 ------
