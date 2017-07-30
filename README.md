@@ -35,6 +35,34 @@ int easy_abs(NonNegative<int> in)
 
 ```
 
+### `Immutable<T>`
+
+```cpp
+auto im = Immutable<int>(3); //can never be changed from now on
+int copied = im.get(); //access to const& of wrapped data
+int copied2 = im; //also implicit
+int const& cref = im;
+```
+
+### `shared_im<T>`
+
+```cpp
+class MyClass {
+    shared_ptr<const OtherClass> data; //MyClass can't change data, but others might
+    int someCachedResult; //cached from data, will this be correct at all times?
+}
+
+class MyClass2 {
+    shared_im<OtherClass> data; //nobody can change this
+    int someCachedResult; //will stay correct, since data can't change
+
+    void foo() {
+        OtherClass const& cref = data.get(); //direct const access to inner
+        OtherClass const& cref2 = data; //implicit casting to inner type
+    }
+}
+```
+
 ### `NonNull<T>`
 
 ```cpp

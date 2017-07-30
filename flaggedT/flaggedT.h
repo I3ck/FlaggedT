@@ -81,9 +81,46 @@ public:
     Immutable& operator=(Immutable &&) = default;
 };
 
+//------------------------------------------------------------------------------
+
 template <typename T>
-using shared_im = std::shared_ptr<Immutable<T>>; ///@todo implement directly (currently required to get().get() and make_shared is rather bad)
-///@todo make_shared_im or similar
+class shared_im final {
+    std::shared_ptr<Immutable<T>> ptr;
+
+public:
+
+    shared_im(T const& in)
+    {
+        ptr = std::make_shared<Immutable<T>>(in);
+    }
+
+    shared_im(T&& in)
+    {
+        ptr = std::make_shared<Immutable<T>>(std::move(in));
+    }
+
+    shared_im() = delete;
+    shared_im(shared_im const&) = default;
+    shared_im(shared_im &&) = default;
+    shared_im& operator=(shared_im const&) = default;
+    shared_im& operator=(shared_im &&) = default;
+
+
+    T const& get() const
+    {
+        return ptr->get();
+    }
+
+    operator T const& () const
+    {
+        return ptr->get();
+    }
+
+    operator T&& ()
+    {
+        return std::move(ptr->get());
+    }
+};
 
 //------------------------------------------------------------------------------
 

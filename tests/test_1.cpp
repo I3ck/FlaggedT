@@ -54,9 +54,9 @@ TEST_CASE("FlaggedT")
 
         int const& cref = im;
 
-        shared_im<int> safe_sharing;
+        auto safe_sharing = shared_im<int>(4);
 
-        safe_sharing = make_shared<Immutable<int>>(4);
+        REQUIRE(safe_sharing.get() == 4);
     }
 
     SECTION("NonNull")
