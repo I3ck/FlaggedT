@@ -599,6 +599,20 @@ public:
     {
         static_assert(MAX >= 0, "CeiledInclusive can only be built from a NonPositive if MAX >= 0");
     }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    CeiledInclusive(BoundedInclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMAX <= MAX, "CeiledInclusive can only be constructed by a BoundedInclusive if its MAX <= this MAX");
+    }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    CeiledInclusive(BoundedExclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMAX <= MAX, "CeiledInclusive can only be constructed by a BoundedExclusive if its MAX <= this MAX");
+    }
 };
 
 template <typename T, int64_t MAX>
@@ -631,6 +645,20 @@ public:
         : base(std::move(in.get()))
     {
         static_assert(MAX > 0, "CeiledExclusive can only be built from a NonPositive if MAX > 0");
+    }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    CeiledExclusive(BoundedInclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMAX < MAX, "CeiledExclusive can only be constructed by a BoundedInclusive if its MAX < this MAX");
+    }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    CeiledExclusive(BoundedExclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMAX <= MAX, "CeiledExclusive can only be constructed by a BoundedExclusive if its MAX <= this MAX");
     }
 };
 
@@ -667,6 +695,20 @@ public:
     {
         static_assert(MIN <= 0, "FlooredInclusive can only be built from a NonNegative if MIN <= 0");
     }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    FlooredInclusive(BoundedInclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN, "FlooredInclusive can only be constructed by a BoundedInclusive if its MIN >= this MIN");
+    }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    FlooredInclusive(BoundedExclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN, "FlooredInclusive can only be constructed by a BoundedExclusive if its MIN >= this MIN");
+    }
 };
 
 template <typename T, int64_t MIN>
@@ -699,6 +741,20 @@ public:
         : base(std::move(in.get()))
     {
         static_assert(MIN < 0, "FlooredExclusive can only be built from a NonNegative if MIN < 0");
+    }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    FlooredExclusive(BoundedInclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN > MIN, "FlooredExclusive can only be constructed by a BoundedInclusive if its MIN > this MIN");
+    }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    FlooredExclusive(BoundedExclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN, "FlooredExclusive can only be constructed by a BoundedExclusive if its MIN >= this MIN");
     }
 };
 
