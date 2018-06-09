@@ -42,6 +42,18 @@ class BoundedInclusive;
 template <typename T, int64_t MIN, int64_t MAX>
 class BoundedExclusive;
 
+template <typename T, std::size_t SIZE>
+class MoreThan;
+
+template <typename T, std::size_t SIZE>
+class LessThan;
+
+template <typename T, std::size_t SIZE>
+class FixedSized;
+
+template <typename T, std::size_t MINSIZE, std::size_t MAXSIZE>
+class FixedRangeInclusive;
+
 //------------------------------------------------------------------------------
 
 template <typename T>
@@ -782,6 +794,13 @@ public:
         if (base::data > MAX)
             throw std::logic_error("Passed value to constructor of BoundedInclusive is too big");
     }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    BoundedInclusive(BoundedExclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN && OMAX <= MAX, "BoundedInclusive can only be constructed by a BoundedExclusive if its MIN >= this MIN and its MAX <= this MAX");
+    }
 };
 
 template <typename T, int64_t MIN, int64_t MAX>
@@ -806,6 +825,13 @@ public:
         if (base::data >= MAX)
             throw std::logic_error("Passed value to constructor of BoundedExclusive is too big");
     }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    BoundedExclusive(BoundedInclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN > MIN && OMAX < MAX, "BoundedExclusive can only be constructed by a BoundedInclusive if its MIN > this MIN and its MAX < this MAX");
+    }
 };
 
 //------------------------------------------------------------------------------
@@ -828,6 +854,27 @@ public:
     {
         if (base::data.empty())
             throw std::logic_error("Can't pass empty container to constructor of NonEmpty");
+    }
+
+    template <typename U = T, int64_t SIZE>
+    NonEmpty(MoreThan<U, SIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(SIZE >= 0, "NonEmpty can only be constructed by a MoreThan if SIZE >= 0");
+    }
+
+    template <typename U = T, int64_t SIZE>
+    NonEmpty(FixedSized<U, SIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(SIZE > 0, "NonEmpty can only be constructed by a FixedSize if SIZE > 0");
+    }
+
+    template <typename U = T, int64_t MINSIZE, int64_t MAXSIZE>
+    NonEmpty(FixedRangeInclusive<U, MINSIZE, MAXSIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MINSIZE > 0 && MAXSIZE, "NonEmpty can only be constructed by a FixedRangeInclusive if MINSIZE and MAXSIZE > 0");
     }
 };
 
@@ -853,6 +900,20 @@ public:
         if (base::data.size() <= SIZE)
             throw std::logic_error("Passed too small container to constructor of MoreThan");
     }
+
+    template <typename U = T, int64_t OSIZE>
+    MoreThan(FixedSized<U, OSIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OSIZE > SIZE, "MoreThan can only be constructed by a FixedSize if its SIZE > this SIZE");
+    }
+
+    template <typename U = T, int64_t MINSIZE, int64_t MAXSIZE>
+    MoreThan(FixedRangeInclusive<U, MINSIZE, MAXSIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MINSIZE > SIZE && MAXSIZE > SIZE, "MoreThan can only be constructed by a FixedRangeInclusive if MINSIZE and MAXSIZE > SIZE");
+    }
 };
 
 //------------------------------------------------------------------------------
@@ -875,6 +936,20 @@ public:
     {
         if (base::data.size() >= SIZE)
             throw std::logic_error("Passed too big container to constructor of LessThan");
+    }
+
+    template <typename U = T, int64_t OSIZE>
+    LessThan(FixedSized<U, OSIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OSIZE < SIZE, "LessThan can only be constructed by a FixedSize if its SIZE < this SIZE");
+    }
+
+    template <typename U = T, int64_t MINSIZE, int64_t MAXSIZE>
+    LessThan(FixedRangeInclusive<U, MINSIZE, MAXSIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MINSIZE < SIZE && MAXSIZE < SIZE, "LessThan can only be constructed by a FixedRangeInclusive if MINSIZE and MAXSIZE < SIZE");
     }
 };
 
@@ -925,6 +1000,13 @@ public:
             throw std::logic_error("Passed too small container to constructor of FixedRangeInclusive");
         if (n > MAXSIZE)
             throw std::logic_error("Passed too big container to constructor of FixedRangeInclusive");
+    }
+
+    template <typename U = T, int64_t SIZE>
+    FixedRangeInclusive(FixedSized<U, SIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(SIZE >= MINSIZE && SIZE <= MAXSIZE, "FixedRangeInclusive can only be constructed by a FixedSize if its is between MINSIZE and MAXSIZE");
     }
 };
 }
