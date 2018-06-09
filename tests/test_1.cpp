@@ -104,6 +104,18 @@ TEST_CASE("FlaggedT")
         REQUIRE(i.get() == 1);
         REQUIRE(f.get() == 1.0f);
         REQUIRE(d.get() == 1.0);
+
+        auto p = NonZero<double>(Positive<double>(3.0));
+        REQUIRE(p.get() == 3.0);
+
+        auto n = NonZero<double>(Negative<double>(-3.0));
+        REQUIRE(n.get() == -3.0);
+
+        auto fi = Positive<double>(FlooredInclusive<double, 1>(3.0));
+        REQUIRE(fi.get() == 3.0);
+
+        auto fe = Positive<double>(FlooredExclusive<double, 0>(3.0));
+        REQUIRE(fe.get() == 3.0);
     }
 
     SECTION("Positive")
@@ -135,6 +147,12 @@ TEST_CASE("FlaggedT")
         REQUIRE(i.get() == 1);
         REQUIRE(f.get() == 1.0f);
         REQUIRE(d.get() == 1.0);
+
+        auto fi = Positive<double>(FlooredInclusive<double, 1>(3.0));
+        REQUIRE(fi.get() == 3.0);
+
+        auto fe = Positive<double>(FlooredExclusive<double, 0>(3.0));
+        REQUIRE(fe.get() == 3.0);
     }
 
     SECTION("NonPositive")
@@ -158,6 +176,15 @@ TEST_CASE("FlaggedT")
         REQUIRE(i.get() == -1);
         REQUIRE(f.get() == -1.0f);
         REQUIRE(d.get() == -1.0);
+
+        auto n = NonPositive<double>(Negative<double>(-3.0));
+        REQUIRE(n.get() == -3.0);
+
+        auto ci = NonPositive<double>(CeiledInclusive<double, 0>(-3.0));
+        REQUIRE(ci.get() == -3.0);
+
+        auto ce = NonPositive<double>(CeiledExclusive<double, 0>(-3.0));
+        REQUIRE(ce.get() == -3.0);
     }
 
     SECTION("Negative")
@@ -189,6 +216,12 @@ TEST_CASE("FlaggedT")
         REQUIRE(i.get() == -1);
         REQUIRE(f.get() == -1.0f);
         REQUIRE(d.get() == -1.0);
+
+        auto ci = Negative<double>(CeiledInclusive<double, -1>(-3.0));
+        REQUIRE(ci.get() == -3.0);
+
+        auto ce = Negative<double>(CeiledExclusive<double, 0>(-3.0));
+        REQUIRE(ce.get() == -3.0);
     }
 
     SECTION("NonNegative")
@@ -212,6 +245,15 @@ TEST_CASE("FlaggedT")
         REQUIRE(i.get() == 1);
         REQUIRE(f.get() == 1.0f);
         REQUIRE(d.get() == 1.0);
+
+        auto p = NonNegative<double>(Positive<double>(3.0));
+        REQUIRE(p.get() == 3.0);
+
+        auto fi = NonNegative<double>(FlooredInclusive<double, 1>(3.0));
+        REQUIRE(fi.get() == 3.0);
+
+        auto fe = NonNegative<double>(FlooredExclusive<double, 0>(3.0));
+        REQUIRE(fe.get() == 3.0);
     }
 
     SECTION("Ceiled") {

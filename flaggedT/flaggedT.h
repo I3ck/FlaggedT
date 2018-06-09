@@ -19,6 +19,26 @@ namespace flaggedT {
 //------------------------------------------------------------------------------
 
 template <typename T>
+class Positive;
+
+template <typename T>
+class Negative;
+
+template <typename T, int64_t MAX>
+class CeiledInclusive;
+
+template <typename T, int64_t MAX>
+class CeiledExclusive;
+
+template <typename T, int64_t MIN>
+class FlooredInclusive;
+
+template <typename T, int64_t MIN>
+class FlooredExclusive;
+
+//------------------------------------------------------------------------------
+
+template <typename T>
 class FlaggedTBase {
 protected:
     FlaggedTBase() = delete;
@@ -280,6 +300,42 @@ public:
         if (0 == base::data)
             throw std::logic_error("Can't pass 0 to constructor of NonZero");
     }
+
+    NonZero(Positive<T>&& in)
+        : base(std::move(in.data))
+    {}
+
+    NonZero(Negative<T>&& in)
+        : base(std::move(in.get()))
+    {}
+
+    template <typename U = T, int64_t MIN>
+    NonZero(FlooredInclusive<U, MIN>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MIN > 0, "NonZero can only be constructed by a FlooredInclusive if MIN > 0");
+    }
+
+    template <typename U = T, int64_t MIN>
+    NonZero(FlooredExclusive<U, MIN>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MIN >= 0, "NonZero can only be constructed by a FlooredExclusive if MIN >= 0");
+    }
+
+    template <typename U = T, int64_t MAX>
+    NonZero(CeiledInclusive<U, MAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MAX < 0, "NonZero can only be constructed by a CeiledInclusive if MAX < 0");
+    }
+
+    template <typename U = T, int64_t MAX>
+    NonZero(CeiledExclusive<U, MAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MAX <= 0, "NonZero can only be constructed by a CeiledExclusive if MAX <= 0");
+    }
 };
 
 //------------------------------------------------------------------------------
@@ -303,6 +359,20 @@ public:
         if (base::data <= 0)
             throw std::logic_error("Can't pass <= 0 to constructor of Positive");
     }
+
+    template <typename U = T, int64_t MIN>
+    Positive(FlooredInclusive<U, MIN>&& in)
+        : base(std::move(in))
+    {
+        static_assert(MIN > 0, "Positive can only be constructed by a FlooredInclusive if MIN > 0");
+    }
+
+    template <typename U = T, int64_t MIN>
+    Positive(FlooredExclusive<U, MIN>&& in)
+        : base(std::move(in))
+    {
+        static_assert(MIN >= 0, "Positive can only be constructed by a FlooredExclusive if MIN >= 0");
+    }
 };
 
 template <typename T>
@@ -323,6 +393,24 @@ public:
     {
         if (base::data > 0)
             throw std::logic_error("Can't pass > 0 to constructor of NonPositive");
+    }
+
+    NonPositive(Negative<T>&& in)
+        : base(std::move(in.get()))
+    {}
+
+    template <typename U = T, int64_t MAX>
+    NonPositive(CeiledInclusive<U, MAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MAX <= 0, "NonPositive can only be constructed by a CeiledInclusive if MAX <= 0");
+    }
+
+    template <typename U = T, int64_t MAX>
+    NonPositive(CeiledExclusive<U, MAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MAX <= 0, "NonPositive can only be constructed by a CeiledExclusive if MAX <= 0");
     }
 };
 
@@ -347,6 +435,20 @@ public:
         if (base::data >= 0)
             throw std::logic_error("Can't pass >= 0 to constructor of Negative");
     }
+
+    template <typename U = T, int64_t MAX>
+    Negative(CeiledInclusive<U, MAX>&& in)
+        : base(std::move(in))
+    {
+        static_assert(MAX < 0, "Negative can only be constructed by a CeiledInclusive if MAX < 0");
+    }
+
+    template <typename U = T, int64_t MAX>
+    Negative(CeiledExclusive<U, MAX>&& in)
+        : base(std::move(in))
+    {
+        static_assert(MAX <= 0, "Negative can only be constructed by a CeiledExclusive if MAX <= 0");
+    }
 };
 
 template <typename T>
@@ -368,11 +470,29 @@ public:
         if (base::data < 0)
             throw std::logic_error("Can't pass < 0 to constructor of NonNegative");
     }
+
+    NonNegative(Positive<T>&& in)
+        : base(std::move(in.get()))
+    {}
+
+    template <typename U = T, int64_t MIN>
+    NonNegative(FlooredInclusive<U, MIN>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MIN > 0, "NonNegative can only be constructed by a FlooredInclusive if MIN > 0");
+    }
+
+    template <typename U = T, int64_t MIN>
+    NonNegative(FlooredExclusive<U, MIN>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MIN >= 0, "NonNegative can only be constructed by a FlooredExclusive if MIN >= 0");
+    }
 };
 
 //------------------------------------------------------------------------------
 
-template <typename T, T MAX>
+template <typename T, int64_t MAX>
 class CeiledInclusive : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
@@ -391,9 +511,21 @@ public:
         if (base::data > MAX)
             throw std::logic_error("Passed value to constructor of CeiledInclusive is too big");
     }
+
+    CeiledInclusive(Negative<T>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MAX >= 0, "CeiledInclusive can only be built from a Negative if MAX >= 0");
+    }
+
+    CeiledInclusive(NonPositive<T>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MAX >= 0, "CeiledInclusive can only be built from a NonPositive if MAX >= 0");
+    }
 };
 
-template <typename T, T MAX>
+template <typename T, int64_t MAX>
 class CeiledExclusive : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
@@ -412,11 +544,23 @@ public:
         if (base::data >= MAX)
             throw std::logic_error("Passed value to constructor of CeiledExclusive is too big");
     }
+
+    CeiledExclusive(Negative<T>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MAX >= 0, "CeiledExclusive can only be built from a Negative if MAX >= 0");
+    }
+
+    CeiledExclusive(NonPositive<T>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MAX > 0, "CeiledExclusive can only be built from a NonPositive if MAX > 0");
+    }
 };
 
 //------------------------------------------------------------------------------
 
-template <typename T, T MIN>
+template <typename T, int64_t MIN>
 class FlooredInclusive : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
@@ -435,9 +579,21 @@ public:
         if (base::data < MIN)
             throw std::logic_error("Passed value to constructor of FlooredInclusive is too small");
     }
+
+    FlooredInclusive(Positive<T>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MIN <= 0, "FlooredInclusive can only be built from a Positive if MIN <= 0");
+    }
+
+    FlooredInclusive(NonNegative<T>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MIN <= 0, "FlooredInclusive can only be built from a NonNegative if MIN <= 0");
+    }
 };
 
-template <typename T, T MIN>
+template <typename T, int64_t MIN>
 class FlooredExclusive : public FlaggedTBase<T> {
     using base = FlaggedTBase<T>;
 
@@ -456,14 +612,27 @@ public:
         if (base::data <= MIN)
             throw std::logic_error("Passed value to constructor of FlooredExclusive is too small");
     }
+
+    FlooredExclusive(Positive<T>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MIN <= 0, "FlooredExclusive can only be built from a Positive if MIN <= 0");
+    }
+
+    FlooredExclusive(NonNegative<T>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(MIN < 0, "FlooredExclusive can only be built from a NonNegative if MIN < 0");
+    }
 };
 
 //------------------------------------------------------------------------------
 
-template <typename T, T MIN, T MAX>
+template <typename T, int64_t MIN, int64_t MAX>
 class BoundedInclusive : public FlaggedTBase<T> {
-    using base = FlaggedTBase<T>;
+    static_assert(MIN <= MAX, "MIN not <= MAX");
 
+    using base = FlaggedTBase<T>;
 public:
     BoundedInclusive() = delete;
 
@@ -483,10 +652,11 @@ public:
     }
 };
 
-template <typename T, T MIN, T MAX>
+template <typename T, int64_t MIN, int64_t MAX>
 class BoundedExclusive : public FlaggedTBase<T> {
-    using base = FlaggedTBase<T>;
+    static_assert(MIN <= MAX, "MIN not <= MAX");
 
+    using base = FlaggedTBase<T>;
 public:
     BoundedExclusive() = delete;
 
@@ -603,8 +773,9 @@ public:
 
 template <typename T, std::size_t MINSIZE, std::size_t MAXSIZE>
 class FixedRangeInclusive : public FlaggedTBase<T> {
-    using base = FlaggedTBase<T>;
+    static_assert(MINSIZE <= MAXSIZE, "MINSIZE not <= MAXSIZE");
 
+    using base = FlaggedTBase<T>;
 public:
     FixedRangeInclusive() = delete;
 
