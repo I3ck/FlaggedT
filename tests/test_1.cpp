@@ -404,6 +404,9 @@ TEST_CASE("FlaggedT")
         auto incl2 = iBoundedIncl(5);
         REQUIRE(incl2.get() == 5);
 
+        auto bi = BoundedInclusive<int, 0, 3>(BoundedInclusive<int, 0, 3>(2));
+        REQUIRE(bi.get() == 2);
+
         auto be = BoundedInclusive<int, 0, 3>(BoundedExclusive<int, 0, 3>(2));
         REQUIRE(be.get() == 2);
     }
@@ -419,8 +422,11 @@ TEST_CASE("FlaggedT")
         auto excl = iBoundedExcl(4);
         REQUIRE(excl.get() == 4);
 
-        auto b = BoundedExclusive<int, 0, 3>(BoundedInclusive<int, 1, 2>(2));
-        REQUIRE(b.get() == 2);
+        auto be = BoundedExclusive<int, 0, 3>(BoundedExclusive<int, 1, 3>(2));
+        REQUIRE(be.get() == 2);
+
+        auto bi = BoundedExclusive<int, 0, 3>(BoundedInclusive<int, 1, 2>(2));
+        REQUIRE(bi.get() == 2);
     }
 
     SECTION("NonEmpty")

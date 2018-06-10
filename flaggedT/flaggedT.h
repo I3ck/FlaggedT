@@ -852,6 +852,13 @@ public:
     }
 
     template <typename U = T, int64_t OMIN, int64_t OMAX>
+    BoundedInclusive(BoundedInclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN && OMAX <= MAX, "BoundedInclusive can only be constructed by another BoundedInclusive if its MIN >= this MIN and its MAX <= this MAX");
+    }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
     BoundedInclusive(BoundedExclusive<U, OMIN, OMAX>&& in)
         : base(std::move(in.get()))
     {
@@ -880,6 +887,13 @@ public:
             throw std::logic_error("Passed value to constructor of BoundedExclusive is too small");
         if (base::data >= MAX)
             throw std::logic_error("Passed value to constructor of BoundedExclusive is too big");
+    }
+
+    template <typename U = T, int64_t OMIN, int64_t OMAX>
+    BoundedExclusive(BoundedExclusive<U, OMIN, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN && OMAX <= MAX, "BoundedExclusive can only be constructed by another BoundedExclusive if its MIN >= this MIN and its MAX <= this MAX");
     }
 
     template <typename U = T, int64_t OMIN, int64_t OMAX>
