@@ -93,7 +93,7 @@ public:
         return data;
     }
 
-    operator T&& () {
+    operator T&& () & {
         return std::move(data);
     }
 };
@@ -150,7 +150,7 @@ public:
         return ptr->get();
     }
 
-    operator T&& () {
+    operator T&& () & {
         return std::move(ptr->get());
     }
 };
