@@ -334,18 +334,46 @@ TEST_CASE("FlaggedT")
         REQUIRE(be.get() == -2);
     }
 
-    SECTION("Floored") {
+    SECTION("FlooredInclusive") {
         constexpr int iMin = 2;
         using iFlooredIncl = FlooredInclusive<int, iMin>;
-        using iFlooredExcl = FlooredExclusive<int, iMin>;
 
         REQUIRE_THROWS(iFlooredIncl(1));
         auto incl = iFlooredIncl(2);
         REQUIRE(incl.get() == 2);
 
+        auto p = FlooredInclusive<int, -1>(Positive<int>(2));
+        REQUIRE(p.get() == 2);
+
+        auto nn = FlooredInclusive<int, -1>(NonNegative<int>(2));
+        REQUIRE(nn.get() == 2);
+
+        auto bi = FlooredInclusive<int, -3>(BoundedInclusive<int, -3, 0>(-2));
+        REQUIRE(bi.get() == -2);
+
+        auto be = FlooredInclusive<int, -3>(BoundedExclusive<int, -3, 1>(-2));
+        REQUIRE(be.get() == -2);
+    }
+
+    SECTION("FlooredExclusive") {
+        constexpr int iMin = 2;
+        using iFlooredExcl = FlooredExclusive<int, iMin>;
+
         REQUIRE_THROWS(iFlooredExcl(2));
         auto excl = iFlooredExcl(3);
         REQUIRE(excl.get() == 3);
+
+        auto p = FlooredExclusive<int, -1>(Positive<int>(2));
+        REQUIRE(p.get() == 2);
+
+        auto nn = FlooredExclusive<int, -1>(NonNegative<int>(2));
+        REQUIRE(nn.get() == 2);
+
+        auto bi = FlooredExclusive<int, -4>(BoundedInclusive<int, -3, 0>(-2));
+        REQUIRE(bi.get() == -2);
+
+        auto be = FlooredExclusive<int, -3>(BoundedExclusive<int, -3, 1>(-2));
+        REQUIRE(be.get() == -2);
     }
 
     SECTION("Bounded") {
