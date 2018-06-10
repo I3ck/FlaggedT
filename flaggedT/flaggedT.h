@@ -359,14 +359,14 @@ public:
     NonZero(BoundedInclusive<U, MIN, MAX>&& in)
         : base(std::move(in.get()))
     {
-        static_assert(MIN < 0 && MAX < 0 || MIN > 0 && MAX > 0, "NonZero can only be constructed by a BoundedInclusive if MIN and MAX don't span over 0");
+        static_assert((MIN < 0 && MAX < 0) || (MIN > 0 && MAX > 0), "NonZero can only be constructed by a BoundedInclusive if MIN and MAX don't span over 0");
     }
 
     template <typename U = T, int64_t MIN, int64_t MAX>
     NonZero(BoundedExclusive<U, MIN, MAX>&& in)
         : base(std::move(in.get()))
     {
-        static_assert(MIN <= 0 && MAX <= 0 || MIN >= 0 && MAX >= 0, "NonZero can only be constructed by a BoundedExclusive if MIN and MAX don't span over 0");
+        static_assert((MIN <= 0 && MAX <= 0) || (MIN >= 0 && MAX >= 0), "NonZero can only be constructed by a BoundedExclusive if MIN and MAX don't span over 0");
     }
 };
 
@@ -408,14 +408,14 @@ public:
 
     template <typename U = T, int64_t MIN, int64_t MAX>
     Positive(BoundedInclusive<U, MIN, MAX>&& in)
-        : base(std::move(in.get()))
+        : base(std::move(in))
     {
         static_assert(MIN > 0 && MAX > 0, "Positive can only be constructed by a BoundedInclusive if MIN and MAX > 0");
     }
 
     template <typename U = T, int64_t MIN, int64_t MAX>
     Positive(BoundedExclusive<U, MIN, MAX>&& in)
-        : base(std::move(in.get()))
+        : base(std::move(in))
     {
         static_assert(MIN >= 0 && MAX >= 0, "Positive can only be constructed by a BoundedExclusive if MIN and MAX >= 0");
     }
@@ -512,14 +512,14 @@ public:
 
     template <typename U = T, int64_t MIN, int64_t MAX>
     Negative(BoundedInclusive<U, MIN, MAX>&& in)
-        : base(std::move(in.get()))
+        : base(std::move(in))
     {
         static_assert(MIN < 0 && MAX < 0, "Negative can only be constructed by a BoundedInclusive if MIN and MAX < 0");
     }
 
     template <typename U = T, int64_t MIN, int64_t MAX>
     Negative(BoundedExclusive<U, MIN, MAX>&& in)
-        : base(std::move(in.get()))
+        : base(std::move(in))
     {
         static_assert(MIN <= 0 && MAX <= 0, "Negative can only be constructed by a BoundedExclusive if MIN and MAX <= 0");
     }
@@ -805,7 +805,7 @@ public:
 
 template <typename T, int64_t MIN, int64_t MAX>
 class BoundedExclusive : public FlaggedTBase<T> {
-    static_assert(MIN <= MAX, "MIN not <= MAX");
+    static_assert(MIN < MAX, "MIN not < MAX");
 
     using base = FlaggedTBase<T>;
 public:

@@ -111,11 +111,23 @@ TEST_CASE("FlaggedT")
         auto n = NonZero<double>(Negative<double>(-3.0));
         REQUIRE(n.get() == -3.0);
 
-        auto fi = Positive<double>(FlooredInclusive<double, 1>(3.0));
+        auto fi = NonZero<double>(FlooredInclusive<double, 1>(3.0));
         REQUIRE(fi.get() == 3.0);
 
-        auto fe = Positive<double>(FlooredExclusive<double, 0>(3.0));
+        auto fe = NonZero<double>(FlooredExclusive<double, 0>(3.0));
         REQUIRE(fe.get() == 3.0);
+
+        auto ci = NonZero<double>(CeiledInclusive<double, -1>(-3.0));
+        REQUIRE(ci.get() == -3.0);
+
+        auto ce = NonZero<double>(CeiledExclusive<double, 0>(-3.0));
+        REQUIRE(ce.get() == -3.0);
+
+        auto bi = NonZero<double>(BoundedInclusive<double, -2, -1>(-1.5));
+        REQUIRE(bi.get() == -1.5);
+
+        auto be = NonZero<double>(BoundedExclusive<double, 2, 3>(2.5));
+        REQUIRE(be.get() == 2.5);
     }
 
     SECTION("Positive")
@@ -153,6 +165,12 @@ TEST_CASE("FlaggedT")
 
         auto fe = Positive<double>(FlooredExclusive<double, 0>(3.0));
         REQUIRE(fe.get() == 3.0);
+
+        auto bi = Positive<double>(BoundedInclusive<double, 1, 2>(1.3));
+        REQUIRE(bi.get() == 1.3);
+
+        auto be = Positive<double>(BoundedExclusive<double, 0, 1>(0.3));
+        REQUIRE(be.get() == 0.3);
     }
 
     SECTION("NonPositive")
@@ -185,6 +203,12 @@ TEST_CASE("FlaggedT")
 
         auto ce = NonPositive<double>(CeiledExclusive<double, 0>(-3.0));
         REQUIRE(ce.get() == -3.0);
+
+        auto bi = NonPositive<double>(BoundedInclusive<double, -2, -1>(-1.3));
+        REQUIRE(bi.get() == -1.3);
+
+        auto be = NonPositive<double>(BoundedExclusive<double, -1, 0>(-0.3));
+        REQUIRE(be.get() == -0.3);
     }
 
     SECTION("Negative")
@@ -222,6 +246,12 @@ TEST_CASE("FlaggedT")
 
         auto ce = Negative<double>(CeiledExclusive<double, 0>(-3.0));
         REQUIRE(ce.get() == -3.0);
+
+        auto bi = Negative<double>(BoundedInclusive<double, -2, -1>(-1.3));
+        REQUIRE(bi.get() == -1.3);
+
+        auto be = Negative<double>(BoundedExclusive<double, -1, 0>(-0.3));
+        REQUIRE(be.get() == -0.3);
     }
 
     SECTION("NonNegative")
@@ -254,20 +284,54 @@ TEST_CASE("FlaggedT")
 
         auto fe = NonNegative<double>(FlooredExclusive<double, 0>(3.0));
         REQUIRE(fe.get() == 3.0);
+
+        auto bi = NonNegative<double>(BoundedInclusive<double, 1, 2>(1.3));
+        REQUIRE(bi.get() == 1.3);
+
+        auto be = NonNegative<double>(BoundedExclusive<double, 0, 1>(0.3));
+        REQUIRE(be.get() == 0.3);
     }
 
-    SECTION("Ceiled") {
+    SECTION("CeiledInclusive") {
         constexpr int iMax = 5;
         using iCeiledIncl = CeiledInclusive<int, iMax>;
-        using iCeiledExcl = CeiledExclusive<int, iMax>;
 
         REQUIRE_THROWS(iCeiledIncl(6));
         auto incl = iCeiledIncl(5);
         REQUIRE(incl.get() == 5);
 
+        auto n = CeiledInclusive<int, 1>(Negative<int>(-2));
+        REQUIRE(n.get() == -2);
+
+        auto np = CeiledInclusive<int, 1>(NonPositive<int>(-2));
+        REQUIRE(np.get() == -2);
+
+        auto bi = CeiledInclusive<int, 1>(BoundedInclusive<int, -3, 1>(-2));
+        REQUIRE(bi.get() == -2);
+
+        auto be = CeiledInclusive<int, 1>(BoundedExclusive<int, -3, 1>(-2));
+        REQUIRE(be.get() == -2);
+    }
+
+    SECTION("CeiledExclusive") {
+        constexpr int iMax = 5;
+        using iCeiledExcl = CeiledExclusive<int, iMax>;
+
         REQUIRE_THROWS(iCeiledExcl(5));
         auto excl = iCeiledExcl(4);
         REQUIRE(excl.get() == 4);
+
+        auto n = CeiledExclusive<int, 1>(Negative<int>(-2));
+        REQUIRE(n.get() == -2);
+
+        auto np = CeiledExclusive<int, 1>(NonPositive<int>(-2));
+        REQUIRE(np.get() == -2);
+
+        auto bi = CeiledExclusive<int, 1>(BoundedInclusive<int, -3, 0>(-2));
+        REQUIRE(bi.get() == -2);
+
+        auto be = CeiledExclusive<int, 1>(BoundedExclusive<int, -3, 1>(-2));
+        REQUIRE(be.get() == -2);
     }
 
     SECTION("Floored") {
