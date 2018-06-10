@@ -1006,7 +1006,7 @@ public:
     FixedRangeInclusive(FixedSized<U, SIZE>&& in)
         : base(std::move(in.get()))
     {
-        static_assert(SIZE >= MINSIZE && SIZE <= MAXSIZE, "FixedRangeInclusive can only be constructed by a FixedSize if its is between MINSIZE and MAXSIZE");
+        static_assert(SIZE >= MINSIZE && SIZE <= MAXSIZE, "FixedRangeInclusive can only be constructed by a FixedSize if its size is between MINSIZE and MAXSIZE");
     }
 };
 }

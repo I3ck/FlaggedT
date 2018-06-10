@@ -1,6 +1,8 @@
 construction from own type
 hide throwing constructors
 
+use std::size instead of .size
+
 reverse sorted
 define more combined types
 custom sorting predicate ?

@@ -468,12 +468,13 @@ TEST_CASE("FlaggedT")
         REQUIRE(works.get().size() == 2);
     }
 
-    SECTION("FixedRange")
+    SECTION("FixedRangeInclusive")
     {
+        using v = std::vector<int>;
         constexpr size_t nMin = 3;
         constexpr size_t nMax = 5;
 
-        using rangedIncl = FixedRangeInclusive<std::vector<int>, nMin, nMax>;
+        using rangedIncl = FixedRangeInclusive<v, nMin, nMax>;
 
         REQUIRE_THROWS(rangedIncl({1,2}));
         REQUIRE_THROWS(rangedIncl({1,2,3,4,5,6}));
@@ -483,6 +484,9 @@ TEST_CASE("FlaggedT")
 
         auto incl2 = rangedIncl({1,2,3,4,5});
         REQUIRE(incl2.get().size() == 5);
+
+        auto fs = FixedRangeInclusive<v, 1, 3>(FixedSized<v, 2>({1, 2}));
+        REQUIRE(fs.get().size() == 2);
     }
 
     SECTION("Sorted")
