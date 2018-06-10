@@ -161,7 +161,7 @@ public:
     NonNull& operator=(NonNull&&) = default;
 
     ///THROWS
-    NonNull(T&& in)
+    explicit NonNull(T&& in)
         : base(std::move(in)) {
 
         if (nullptr == base::data)
@@ -296,7 +296,7 @@ public:
     NonZero& operator=(NonZero&&) = default;
 
     ///THROWS
-    NonZero(T&& in)
+    explicit NonZero(T&& in)
         : base(std::move(in)) {
 
         if (0 == base::data)
@@ -367,7 +367,7 @@ public:
     Positive& operator=(Positive&&) = default;
 
     ///THROWS
-    Positive(T&& in)
+    explicit Positive(T&& in)
         : base(std::move(in)) {
 
         if (base::data <= 0)
@@ -416,7 +416,7 @@ public:
     NonPositive& operator=(NonPositive&&) = default;
 
     ///THROWS
-    NonPositive(T&& in)
+    explicit NonPositive(T&& in)
         : base(std::move(in)) {
 
         if (base::data > 0)
@@ -470,7 +470,7 @@ public:
     Negative& operator=(Negative&&) = default;
 
     ///THROWS
-    Negative(T&& in)
+    explicit Negative(T&& in)
         : base(std::move(in)) {
 
         if (base::data >= 0)
@@ -519,7 +519,7 @@ public:
     NonNegative& operator=(NonNegative&&) = default;
 
     ///THROWS
-    NonNegative(T&& in)
+    explicit NonNegative(T&& in)
         : base(std::move(in)) {
 
         if (base::data < 0)
@@ -573,7 +573,7 @@ public:
     CeiledInclusive& operator=(CeiledInclusive&&) = default;
 
     ///THROWS
-    CeiledInclusive(T&& in)
+    explicit CeiledInclusive(T&& in)
         : base(std::move(in)) {
 
         if (base::data > MAX)
@@ -634,7 +634,7 @@ public:
     CeiledExclusive& operator=(CeiledExclusive&&) = default;
 
     ///THROWS
-    CeiledExclusive(T&& in)
+    explicit CeiledExclusive(T&& in)
         : base(std::move(in)) {
 
         if (base::data >= MAX)
@@ -697,7 +697,7 @@ public:
     FlooredInclusive& operator=(FlooredInclusive&&) = default;
 
     ///THROWS
-    FlooredInclusive(T&& in)
+    explicit FlooredInclusive(T&& in)
         : base(std::move(in)) {
 
         if (base::data < MIN)
@@ -758,7 +758,7 @@ public:
     FlooredExclusive& operator=(FlooredExclusive&&) = default;
 
     ///THROWS
-    FlooredExclusive(T&& in)
+    explicit FlooredExclusive(T&& in)
         : base(std::move(in)) {
 
         if (base::data <= MIN)
@@ -822,7 +822,7 @@ public:
     BoundedInclusive& operator=(BoundedInclusive&&) = default;
 
     ///THROWS
-    BoundedInclusive(T&& in)
+    explicit BoundedInclusive(T&& in)
         : base(std::move(in)) {
 
         if (base::data < MIN)
@@ -860,7 +860,7 @@ public:
     BoundedExclusive& operator=(BoundedExclusive&&) = default;
 
     ///THROWS
-    BoundedExclusive(T&& in)
+    explicit BoundedExclusive(T&& in)
         : base(std::move(in)) {
 
         if (base::data <= MIN)
@@ -899,7 +899,7 @@ public:
     NonEmpty& operator=(NonEmpty&&) = default;
 
     ///THROWS
-    NonEmpty(T&& in)
+    explicit NonEmpty(T&& in)
         : base(std::move(in)) {
 
         if (base::data.empty())
@@ -944,7 +944,7 @@ public:
     MoreThan& operator=(MoreThan&&) = default;
 
     ///THROWS
-    MoreThan(T&& in)
+    explicit MoreThan(T&& in)
         : base(std::move(in)) {
 
         if (base::data.size() <= SIZE)
@@ -988,7 +988,7 @@ public:
     LessThan& operator=(LessThan&&) = default;
 
     ///THROWS
-    LessThan(T&& in)
+    explicit LessThan(T&& in)
         : base(std::move(in)) {
 
         if (base::data.size() >= SIZE)
@@ -1032,7 +1032,7 @@ public:
     FixedSized& operator=(FixedSized&&) = default;
 
     ///THROWS
-    FixedSized(T&& in)
+    explicit FixedSized(T&& in)
         : base(std::move(in)) {
 
         if (base::data.size() != SIZE)
@@ -1056,7 +1056,7 @@ public:
     FixedRangeInclusive& operator=(FixedRangeInclusive&&) = default;
 
     ///THROWS
-    FixedRangeInclusive(T&& in)
+    explicit FixedRangeInclusive(T&& in)
         : base(std::move(in)) {
 
         const auto n = base::data.size();
@@ -1076,7 +1076,7 @@ public:
     template <typename U = T, std::size_t SIZE>
     FixedRangeInclusive(FixedSized<U, SIZE>&& in)
         : base(std::move(in.get())) {
-            
+
         static_assert(SIZE >= MINSIZE && SIZE <= MAXSIZE, "FixedRangeInclusive can only be constructed by a FixedSize if its size is between MINSIZE and MAXSIZE");
     }
 };
