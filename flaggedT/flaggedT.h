@@ -14,6 +14,8 @@
 #ifndef FLAGGEDT_H
 #define FLAGGEDT_H
 
+#include <utility>
+
 namespace flaggedT {
 
 //------------------------------------------------------------------------------
@@ -80,7 +82,7 @@ protected:
         : data(in) {}
 
     FlaggedTBase(T&& in)
-        : data(std::move(in)) {}
+        : data(std::forward<T>(in)) {}
 
 public:
     T const& get() const {
@@ -107,7 +109,7 @@ public:
         : base(in) {}
 
     Immutable(T&& in)
-        : base(std::move(in)) {}
+        : base(std::forward<T>(in)) {}
 
     Immutable() = delete;
 
@@ -130,7 +132,7 @@ public:
     }
 
     shared_im(T&& in) {
-        ptr = std::make_shared<Immutable<T>>(std::move(in));
+        ptr = std::make_shared<Immutable<T>>(std::forward<T>(in));
     }
 
     shared_im() = delete;
@@ -170,7 +172,7 @@ public:
 
     ///THROWS
     explicit NonNull(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (nullptr == base::data)
             throw FlaggedTError("Can't pass nullptr to constructor of NonNull");
@@ -192,7 +194,7 @@ public:
     Sorted& operator=(Sorted&&) = default;
 
     Sorted(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         std::sort(std::begin(base::data), std::end(base::data));
     }
@@ -213,7 +215,7 @@ public:
     Shuffled& operator=(Shuffled&&) = default;
 
     Shuffled(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         std::shuffle(std::begin(base::data), std::end(base::data));
     }
@@ -234,7 +236,7 @@ public:
     Unique& operator=(Unique&&) = default;
 
     Unique(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         make_data_unique();
     }
@@ -262,7 +264,7 @@ public:
     UniqueAndSorted& operator=(UniqueAndSorted&&) = default;
 
     UniqueAndSorted(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         std::sort(std::begin(base::data), std::end(base::data));
         make_data_unique();
@@ -305,7 +307,7 @@ public:
 
     ///THROWS
     explicit NonZero(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (0 == base::data)
             throw FlaggedTError("Can't pass 0 to constructor of NonZero");
@@ -376,7 +378,7 @@ public:
 
     ///THROWS
     explicit Positive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data <= 0)
             throw FlaggedTError("Can't pass <= 0 to constructor of Positive");
@@ -425,7 +427,7 @@ public:
 
     ///THROWS
     explicit NonPositive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data > 0)
             throw FlaggedTError("Can't pass > 0 to constructor of NonPositive");
@@ -479,7 +481,7 @@ public:
 
     ///THROWS
     explicit Negative(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data >= 0)
             throw FlaggedTError("Can't pass >= 0 to constructor of Negative");
@@ -528,7 +530,7 @@ public:
 
     ///THROWS
     explicit NonNegative(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data < 0)
             throw FlaggedTError("Can't pass < 0 to constructor of NonNegative");
@@ -582,7 +584,7 @@ public:
 
     ///THROWS
     explicit CeiledInclusive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data > MAX)
             throw FlaggedTError("Passed value to constructor of CeiledInclusive is too big");
@@ -643,7 +645,7 @@ public:
 
     ///THROWS
     explicit CeiledExclusive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data >= MAX)
             throw FlaggedTError("Passed value to constructor of CeiledExclusive is too big");
@@ -706,7 +708,7 @@ public:
 
     ///THROWS
     explicit FlooredInclusive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data < MIN)
             throw FlaggedTError("Passed value to constructor of FlooredInclusive is too small");
@@ -767,7 +769,7 @@ public:
 
     ///THROWS
     explicit FlooredExclusive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data <= MIN)
             throw FlaggedTError("Passed value to constructor of FlooredExclusive is too small");
@@ -831,7 +833,7 @@ public:
 
     ///THROWS
     explicit BoundedInclusive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data < MIN)
             throw FlaggedTError("Passed value to constructor of BoundedInclusive is too small");
@@ -869,7 +871,7 @@ public:
 
     ///THROWS
     explicit BoundedExclusive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data <= MIN)
             throw FlaggedTError("Passed value to constructor of BoundedExclusive is too small");
@@ -908,7 +910,7 @@ public:
 
     ///THROWS
     explicit NonEmpty(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data.empty())
             throw FlaggedTError("Can't pass empty container to constructor of NonEmpty");
@@ -953,7 +955,7 @@ public:
 
     ///THROWS
     explicit MoreThan(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data.size() <= SIZE)
             throw FlaggedTError("Passed too small container to constructor of MoreThan");
@@ -997,7 +999,7 @@ public:
 
     ///THROWS
     explicit LessThan(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data.size() >= SIZE)
             throw FlaggedTError("Passed too big container to constructor of LessThan");
@@ -1041,7 +1043,7 @@ public:
 
     ///THROWS
     explicit FixedSized(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         if (base::data.size() != SIZE)
             throw FlaggedTError("Passed container with wrong size to constructor of FixedSized");
@@ -1065,7 +1067,7 @@ public:
 
     ///THROWS
     explicit FixedRangeInclusive(T&& in)
-        : base(std::move(in)) {
+        : base(std::forward<T>(in)) {
 
         const auto n = base::data.size();
         if (n < MINSIZE)
