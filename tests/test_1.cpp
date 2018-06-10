@@ -290,6 +290,12 @@ TEST_CASE("FlaggedT")
         auto incl = iCeiledIncl(5);
         REQUIRE(incl.get() == 5);
 
+        auto ci = CeiledInclusive<int, 1>(CeiledInclusive<int, 0>(-2));
+        REQUIRE(ci.get() == -2);
+
+        auto ce = CeiledInclusive<int, 1>(CeiledExclusive<int, 0>(-2));
+        REQUIRE(ce.get() == -2);
+
         auto n = CeiledInclusive<int, 1>(Negative<int>(-2));
         REQUIRE(n.get() == -2);
 
@@ -310,6 +316,12 @@ TEST_CASE("FlaggedT")
         REQUIRE_THROWS(iCeiledExcl(5));
         auto excl = iCeiledExcl(4);
         REQUIRE(excl.get() == 4);
+
+        auto ce = CeiledExclusive<int, 1>(CeiledExclusive<int, 0>(-2));
+        REQUIRE(ce.get() == -2);
+
+        auto ci = CeiledExclusive<int, 1>(CeiledInclusive<int, 0>(-2));
+        REQUIRE(ci.get() == -2);
 
         auto n = CeiledExclusive<int, 1>(Negative<int>(-2));
         REQUIRE(n.get() == -2);

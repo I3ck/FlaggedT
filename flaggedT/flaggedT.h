@@ -600,6 +600,20 @@ public:
             throw std::logic_error("Passed value to constructor of CeiledInclusive is too big");
     }
 
+    template <typename U = T, int64_t OMAX>
+    CeiledInclusive(CeiledInclusive<U, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMAX <= MAX, "CeiledInclusive can only be built from another CeiledInclusive if its MAX <= this MAX");
+    }
+
+    template <typename U = T, int64_t OMAX>
+    CeiledInclusive(CeiledExclusive<U, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMAX <= MAX, "CeiledInclusive can only be built from a CeiledExclusive if its MAX <= this MAX");
+    }
+
     CeiledInclusive(Negative<T>&& in)
         : base(std::move(in.get()))
     {
@@ -645,6 +659,20 @@ public:
     {
         if (base::data >= MAX)
             throw std::logic_error("Passed value to constructor of CeiledExclusive is too big");
+    }
+
+    template <typename U = T, int64_t OMAX>
+    CeiledExclusive(CeiledExclusive<U, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMAX <= MAX, "CeiledExclusive can only be built from another CeiledExclusive if its MAX <= this MAX");
+    }
+
+    template <typename U = T, int64_t OMAX>
+    CeiledExclusive(CeiledInclusive<U, OMAX>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMAX < MAX, "CeiledExclusive can only be built from a CeiledInclusive if its MAX < this MAX");
     }
 
     CeiledExclusive(Negative<T>&& in)
