@@ -1,5 +1,7 @@
 use std::size instead of .size (would lift to c++17 requirement)
 
+forwarding
+copy construction
 reverse sorted
 define more combined types
 custom sorting predicate ?

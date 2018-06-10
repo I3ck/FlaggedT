@@ -36,6 +36,18 @@ int add_one(int in) {
     return in + 1;
 }
 
+int conversion_inner(Positive<int> && pi) {
+    return pi.get();
+}
+
+int conversion_outer() {
+    //below can't compile, since type not guarantee to be Positive
+    //return conversion_inner(FlooredInclusive<int, -1>(3));
+
+    //below conversion to Positive compiles and will never throw
+    return conversion_inner(FlooredInclusive<int, 1>(3));
+}
+
 //examples (move these to example files) [also the example test case]
 
 TEST_CASE("FlaggedT") {

@@ -10,6 +10,10 @@ Examples, Tutorials
 using namespace flaggedT;
 ```
 
+### Creating wrapped types
+
+The provided types can be created by using the constructor of the wanted type.  
+Some constructors will perform an action (e.g. `Sorted` sorting its input data) or throw a `FlaggedTError : std::logic_error` if the input is invalid (e.g. `Positive(-1)`).
 
 ### Accessing the wrapped data
 
@@ -33,6 +37,26 @@ int easy_abs(NonNegative<int> in)
     return in.get();
 }
 
+```
+
+### Safe conversion between wrapped types  
+
+Many of `FlaggedT`'s types can be converted between each other.  
+Correctness of those conversions are all enforced during compile time.  
+This allows for less restrictive functions to always be called by the parameters of more restrictive functions.
+
+```cpp
+int conversion_inner(Positive<int> && pi) { //int > 0
+    return pi.get();
+}
+
+int conversion_outer() {
+    //below can't compile, since type not guarantee to be Positive
+    //return conversion_inner(FlooredInclusive<int, -1>(3)); //inner >= -1
+
+    //below conversion to Positive compiles and will never throw
+    return conversion_inner(FlooredInclusive<int, 1>(3)); //inner >= 1 -> Positive
+}
 ```
 
 ### `Immutable<T>`
@@ -239,7 +263,7 @@ void access_four(MoreThan<std::vector<int>,3> const& in) {
 
 Version
 -------
-2.4.0
+3.0.0
 
 License
 ------
