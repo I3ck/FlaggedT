@@ -344,6 +344,12 @@ TEST_CASE("FlaggedT")
         auto incl = iFlooredIncl(2);
         REQUIRE(incl.get() == 2);
 
+        auto fi = FlooredInclusive<int, 1>(FlooredInclusive<int, 2>(2));
+        REQUIRE(fi.get() == 2);
+
+        auto fe = FlooredInclusive<int, 1>(FlooredExclusive<int, 2>(3));
+        REQUIRE(fe.get() == 3);
+
         auto p = FlooredInclusive<int, -1>(Positive<int>(2));
         REQUIRE(p.get() == 2);
 
@@ -364,6 +370,12 @@ TEST_CASE("FlaggedT")
         REQUIRE_THROWS(iFlooredExcl(2));
         auto excl = iFlooredExcl(3);
         REQUIRE(excl.get() == 3);
+
+        auto fe = FlooredExclusive<int, 1>(FlooredExclusive<int, 2>(3));
+        REQUIRE(fe.get() == 3);
+
+        auto fi = FlooredExclusive<int, 1>(FlooredInclusive<int, 2>(2));
+        REQUIRE(fi.get() == 2);
 
         auto p = FlooredExclusive<int, -1>(Positive<int>(2));
         REQUIRE(p.get() == 2);

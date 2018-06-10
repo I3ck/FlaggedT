@@ -724,6 +724,20 @@ public:
             throw std::logic_error("Passed value to constructor of FlooredInclusive is too small");
     }
 
+    template <typename U = T, int64_t OMIN>
+    FlooredInclusive(FlooredInclusive<U, OMIN>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN, "FlooredInclusive can only be built from another FlooredInclusive if its MIN >= this MIN");
+    }
+
+    template <typename U = T, int64_t OMIN>
+    FlooredInclusive(FlooredExclusive<U, OMIN>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN, "FlooredInclusive can only be built from a FlooredExclusive if its MIN >= this MIN");
+    }
+
     FlooredInclusive(Positive<T>&& in)
         : base(std::move(in.get()))
     {
@@ -769,6 +783,20 @@ public:
     {
         if (base::data <= MIN)
             throw std::logic_error("Passed value to constructor of FlooredExclusive is too small");
+    }
+
+    template <typename U = T, int64_t OMIN>
+    FlooredExclusive(FlooredExclusive<U, OMIN>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN >= MIN, "FlooredExclusive can only be built from another FlooredExclusive if its MIN >= this MIN");
+    }
+
+    template <typename U = T, int64_t OMIN>
+    FlooredExclusive(FlooredInclusive<U, OMIN>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMIN > MIN, "FlooredExclusive can only be built from a FlooredInclusive if its MIN > this MIN");
     }
 
     FlooredExclusive(Positive<T>&& in)
