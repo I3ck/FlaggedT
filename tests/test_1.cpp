@@ -73,16 +73,6 @@ TEST_CASE("FlaggedT")
         delete i2s;
     }
 
-    SECTION("NonEmpty")
-    {
-        auto emptyVec = std::vector<int>();
-        REQUIRE_THROWS(NonEmpty<std::vector<int> >(std::move(emptyVec)));
-
-        auto goodVec = std::vector<int>({ 1, 2 });
-        auto ne = NonEmpty<std::vector<int> >(std::move(goodVec));
-        REQUIRE(ne.get().size() == 2);
-    }
-
     SECTION("NonZero")
     {
         int ifail = 0;
@@ -376,11 +366,10 @@ TEST_CASE("FlaggedT")
         REQUIRE(be.get() == -2);
     }
 
-    SECTION("Bounded") {
+    SECTION("BoundedInclusive") {
         constexpr int iMin = 3;
         constexpr int iMax = 5;
         using iBoundedIncl = BoundedInclusive<int, iMin, iMax>;
-        using iBoundedExcl = BoundedExclusive<int, iMin, iMax>;
 
         REQUIRE_THROWS(iBoundedIncl(2));
         REQUIRE_THROWS(iBoundedIncl(6));
@@ -391,33 +380,79 @@ TEST_CASE("FlaggedT")
         auto incl2 = iBoundedIncl(5);
         REQUIRE(incl2.get() == 5);
 
+        auto be = BoundedInclusive<int, 0, 3>(BoundedExclusive<int, 0, 3>(2));
+        REQUIRE(be.get() == 2);
+    }
+
+    SECTION("BoundedExclusive") {
+        constexpr int iMin = 3;
+        constexpr int iMax = 5;
+        using iBoundedExcl = BoundedExclusive<int, iMin, iMax>;
+
         REQUIRE_THROWS(iBoundedExcl(3));
         REQUIRE_THROWS(iBoundedExcl(5));
 
         auto excl = iBoundedExcl(4);
         REQUIRE(excl.get() == 4);
+
+        auto b = BoundedExclusive<int, 0, 3>(BoundedInclusive<int, 1, 2>(2));
+        REQUIRE(b.get() == 2);
+    }
+
+    SECTION("NonEmpty")
+    {
+        using v = std::vector<int>;
+        auto emptyVec = v();
+        REQUIRE_THROWS(NonEmpty<v>(std::move(emptyVec)));
+
+        auto goodVec = v({ 1, 2 });
+        auto ne = NonEmpty<v>(v(goodVec));
+        REQUIRE(ne.get().size() == 2);
+
+        auto mt = NonEmpty<v>(MoreThan<v, 1>(v(goodVec)));
+        REQUIRE(mt.get().size() == 2);
+
+        auto fs = NonEmpty<v>(FixedSized<v, 2>(v(goodVec)));
+        REQUIRE(fs.get().size() == 2);
+
+        auto fri = NonEmpty<v>(FixedRangeInclusive<v, 2, 4>(v(goodVec)));
+        REQUIRE(fri.get().size() == 2);
     }
 
     SECTION("MoreThan")
     {
-        auto tooSmall = std::vector<int>({ 1, 2, 3 });
-        using more3 = MoreThan<std::vector<int>, 3>;
+        using v = std::vector<int>;
+        auto tooSmall = v({ 1, 2, 3 });
+        using more3 = MoreThan<v, 3>;
         REQUIRE_THROWS(more3(std::move(tooSmall)));
 
-        auto bigEnough = std::vector<int>({ 1, 2, 3, 4 });
-        auto works = more3(std::move(bigEnough));
+        auto bigEnough = v({ 1, 2, 3, 4 });
+        auto works = more3(v(bigEnough));
         REQUIRE(works.get().size() == 4);
+
+        auto fs = MoreThan<v, 3>(FixedSized<v, 4>(v(bigEnough)));
+        REQUIRE(fs.get().size() == 4);
+
+        auto fri = MoreThan<v, 3>(FixedRangeInclusive<v, 4, 4>(v(bigEnough)));
+        REQUIRE(fri.get().size() == 4);
     }
 
     SECTION("LessThan")
     {
-        auto tooBig = std::vector<int>({ 1, 2, 3 });
-        using less3 = LessThan<std::vector<int>, 3>;
+        using v = std::vector<int>;
+        auto tooBig = v({ 1, 2, 3 });
+        using less3 = LessThan<v, 3>;
         REQUIRE_THROWS(less3(std::move(tooBig)));
 
         auto smallEnough = std::vector<int>({ 1, 2 });
-        auto works = less3(std::move(smallEnough));
+        auto works = less3(v(smallEnough));
         REQUIRE(works.get().size() == 2);
+
+        auto fs = LessThan<v, 3>(FixedSized<v, 2>(v(smallEnough)));
+        REQUIRE(fs.get().size() == 2);
+
+        auto fri = LessThan<v, 3>(FixedRangeInclusive<v, 1, 2>(v(smallEnough)));
+        REQUIRE(fri.get().size() == 2);
     }
 
     SECTION("FixedSized")
