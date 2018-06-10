@@ -26,6 +26,8 @@ int abs = easy_abs(wrapped); //using a method defined for the wrapped type
 int result = add_one(wrapped); //still able to use methods defined for the inner type
 
 int unwrapped = std::move(wrapped);
+//or
+//int unwrapped = std::move(wrapped).unwrap();
 
 int add_one(int in)
 {
@@ -46,16 +48,19 @@ Correctness of those conversions are all enforced during compile time.
 This allows for less restrictive functions to always be called by the parameters of more restrictive functions.
 
 ```cpp
-int conversion_inner(Positive<int> && pi) { //int > 0
+int conversion_inner(Positive<int> pi) {
     return pi.get();
 }
 
 int conversion_outer() {
-    //below can't compile, since type not guarantee to be Positive
-    //return conversion_inner(FlooredInclusive<int, -1>(3)); //inner >= -1
+    auto fi1 = FlooredInclusive<int, -1>(3); //could throw if passed number < -1
+    auto fi2 = FlooredInclusive<int,  1>(3); //could throw if passed number <  1
 
-    //below conversion to Positive compiles and will never throw
-    return conversion_inner(FlooredInclusive<int, 1>(3)); //inner >= 1 -> Positive
+    //below can't compile, since fi1 not guarantee to be Positive
+    //return conversion_inner(fi1); //"Positive can only be constructed by a FlooredInclusive if MIN > 0"
+
+    //below conversion from fi2 to Positive compiles and will never throw
+    return conversion_inner(fi2);
 }
 ```
 
@@ -263,7 +268,7 @@ void access_four(MoreThan<std::vector<int>,3> const& in) {
 
 Version
 -------
-3.0.0
+3.0.1
 
 License
 ------

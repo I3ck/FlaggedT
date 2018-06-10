@@ -36,16 +36,19 @@ int add_one(int in) {
     return in + 1;
 }
 
-int conversion_inner(Positive<int> && pi) {
+int conversion_inner(Positive<int> pi) {
     return pi.get();
 }
 
 int conversion_outer() {
-    //below can't compile, since type not guarantee to be Positive
-    //return conversion_inner(FlooredInclusive<int, -1>(3));
+    auto fi1 = FlooredInclusive<int, -1>(3); //could throw if passed number < -1
+    auto fi2 = FlooredInclusive<int,  1>(3); //could throw if passed number <  1
 
-    //below conversion to Positive compiles and will never throw
-    return conversion_inner(FlooredInclusive<int, 1>(3));
+    //below can't compile, since fi1 not guarantee to be Positive
+    //return conversion_inner(fi1); //"Positive can only be constructed by a FlooredInclusive if MIN > 0"
+
+    //below conversion from fi2 to Positive compiles and will never throw
+    return conversion_inner(fi2);
 }
 
 //examples (move these to example files) [also the example test case]
