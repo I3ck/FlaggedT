@@ -1,4 +1,4 @@
-use std::size instead of .size
+use std::size instead of .size (would lift to c++17 requirement)
 
 reverse sorted
 define more combined types
