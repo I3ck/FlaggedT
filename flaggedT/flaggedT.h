@@ -56,6 +56,14 @@ class FixedRangeInclusive;
 
 //------------------------------------------------------------------------------
 
+class FlaggedTError : public std::logic_error {
+public:
+    FlaggedTError(std::string const& msg)
+        : std::logic_error(msg) {}
+};
+
+//------------------------------------------------------------------------------
+
 template <typename T>
 class FlaggedTBase {
 protected:
@@ -165,7 +173,7 @@ public:
         : base(std::move(in)) {
 
         if (nullptr == base::data)
-            throw std::logic_error("Can't pass nullptr to constructor of NonNull");
+            throw FlaggedTError("Can't pass nullptr to constructor of NonNull");
     }
 };
 
@@ -300,7 +308,7 @@ public:
         : base(std::move(in)) {
 
         if (0 == base::data)
-            throw std::logic_error("Can't pass 0 to constructor of NonZero");
+            throw FlaggedTError("Can't pass 0 to constructor of NonZero");
     }
 
     NonZero(Positive<T>&& in)
@@ -371,7 +379,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data <= 0)
-            throw std::logic_error("Can't pass <= 0 to constructor of Positive");
+            throw FlaggedTError("Can't pass <= 0 to constructor of Positive");
     }
 
     template <typename U = T, int64_t MIN>
@@ -420,7 +428,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data > 0)
-            throw std::logic_error("Can't pass > 0 to constructor of NonPositive");
+            throw FlaggedTError("Can't pass > 0 to constructor of NonPositive");
     }
 
     NonPositive(Negative<T>&& in)
@@ -474,7 +482,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data >= 0)
-            throw std::logic_error("Can't pass >= 0 to constructor of Negative");
+            throw FlaggedTError("Can't pass >= 0 to constructor of Negative");
     }
 
     template <typename U = T, int64_t MAX>
@@ -523,7 +531,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data < 0)
-            throw std::logic_error("Can't pass < 0 to constructor of NonNegative");
+            throw FlaggedTError("Can't pass < 0 to constructor of NonNegative");
     }
 
     NonNegative(Positive<T>&& in)
@@ -577,7 +585,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data > MAX)
-            throw std::logic_error("Passed value to constructor of CeiledInclusive is too big");
+            throw FlaggedTError("Passed value to constructor of CeiledInclusive is too big");
     }
 
     template <typename U = T, int64_t OMAX>
@@ -638,7 +646,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data >= MAX)
-            throw std::logic_error("Passed value to constructor of CeiledExclusive is too big");
+            throw FlaggedTError("Passed value to constructor of CeiledExclusive is too big");
     }
 
     template <typename U = T, int64_t OMAX>
@@ -701,7 +709,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data < MIN)
-            throw std::logic_error("Passed value to constructor of FlooredInclusive is too small");
+            throw FlaggedTError("Passed value to constructor of FlooredInclusive is too small");
     }
 
     template <typename U = T, int64_t OMIN>
@@ -762,7 +770,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data <= MIN)
-            throw std::logic_error("Passed value to constructor of FlooredExclusive is too small");
+            throw FlaggedTError("Passed value to constructor of FlooredExclusive is too small");
     }
 
     template <typename U = T, int64_t OMIN>
@@ -826,9 +834,9 @@ public:
         : base(std::move(in)) {
 
         if (base::data < MIN)
-            throw std::logic_error("Passed value to constructor of BoundedInclusive is too small");
+            throw FlaggedTError("Passed value to constructor of BoundedInclusive is too small");
         if (base::data > MAX)
-            throw std::logic_error("Passed value to constructor of BoundedInclusive is too big");
+            throw FlaggedTError("Passed value to constructor of BoundedInclusive is too big");
     }
 
     template <typename U = T, int64_t OMIN, int64_t OMAX>
@@ -864,9 +872,9 @@ public:
         : base(std::move(in)) {
 
         if (base::data <= MIN)
-            throw std::logic_error("Passed value to constructor of BoundedExclusive is too small");
+            throw FlaggedTError("Passed value to constructor of BoundedExclusive is too small");
         if (base::data >= MAX)
-            throw std::logic_error("Passed value to constructor of BoundedExclusive is too big");
+            throw FlaggedTError("Passed value to constructor of BoundedExclusive is too big");
     }
 
     template <typename U = T, int64_t OMIN, int64_t OMAX>
@@ -903,7 +911,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data.empty())
-            throw std::logic_error("Can't pass empty container to constructor of NonEmpty");
+            throw FlaggedTError("Can't pass empty container to constructor of NonEmpty");
     }
 
     template <typename U = T, std::size_t SIZE>
@@ -948,7 +956,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data.size() <= SIZE)
-            throw std::logic_error("Passed too small container to constructor of MoreThan");
+            throw FlaggedTError("Passed too small container to constructor of MoreThan");
     }
 
     template <typename U = T, std::size_t OSIZE>
@@ -992,7 +1000,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data.size() >= SIZE)
-            throw std::logic_error("Passed too big container to constructor of LessThan");
+            throw FlaggedTError("Passed too big container to constructor of LessThan");
     }
 
     template <typename U = T, std::size_t OSIZE>
@@ -1036,7 +1044,7 @@ public:
         : base(std::move(in)) {
 
         if (base::data.size() != SIZE)
-            throw std::logic_error("Passed container with wrong size to constructor of FixedSized");
+            throw FlaggedTError("Passed container with wrong size to constructor of FixedSized");
     }
 };
 
@@ -1061,9 +1069,9 @@ public:
 
         const auto n = base::data.size();
         if (n < MINSIZE)
-            throw std::logic_error("Passed too small container to constructor of FixedRangeInclusive");
+            throw FlaggedTError("Passed too small container to constructor of FixedRangeInclusive");
         if (n > MAXSIZE)
-            throw std::logic_error("Passed too big container to constructor of FixedRangeInclusive");
+            throw FlaggedTError("Passed too big container to constructor of FixedRangeInclusive");
     }
 
     template <typename U = T, std::size_t OMINSIZE, std::size_t OMAXSIZE>

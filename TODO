@@ -1,5 +1,3 @@
-hide throwing constructors
-
 use std::size instead of .size
 
 reverse sorted
