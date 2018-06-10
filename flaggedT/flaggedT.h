@@ -972,6 +972,13 @@ public:
     }
 
     template <typename U = T, std::size_t OSIZE>
+    MoreThan(MoreThan<U, OSIZE>&& in)
+        : base(std::move(in))
+    {
+        static_assert(OSIZE >= SIZE, "MoreThan can only be constructed by another MoreThan if its SIZE >= this SIZE");
+    }
+
+    template <typename U = T, std::size_t OSIZE>
     MoreThan(FixedSized<U, OSIZE>&& in)
         : base(std::move(in))
     {
@@ -1006,6 +1013,13 @@ public:
     {
         if (base::data.size() >= SIZE)
             throw std::logic_error("Passed too big container to constructor of LessThan");
+    }
+
+    template <typename U = T, std::size_t OSIZE>
+    LessThan(LessThan<U, OSIZE>&& in)
+        : base(std::move(in))
+    {
+        static_assert(OSIZE <= SIZE, "LessThan can only be constructed by another LessThan if its SIZE <= this SIZE");
     }
 
     template <typename U = T, std::size_t OSIZE>
@@ -1070,6 +1084,13 @@ public:
             throw std::logic_error("Passed too small container to constructor of FixedRangeInclusive");
         if (n > MAXSIZE)
             throw std::logic_error("Passed too big container to constructor of FixedRangeInclusive");
+    }
+
+    template <typename U = T, std::size_t OMINSIZE, std::size_t OMAXSIZE>
+    FixedRangeInclusive(FixedRangeInclusive<U, OMINSIZE, OMAXSIZE>&& in)
+        : base(std::move(in.get()))
+    {
+        static_assert(OMINSIZE >= MINSIZE && OMAXSIZE <= MAXSIZE, "FixedRangeInclusive can only be constructed by another FixedRangeInclusive if its MINSIZE >= this MINSIZE and its MAXSIZE <= this MAXSIZE");
     }
 
     template <typename U = T, std::size_t SIZE>

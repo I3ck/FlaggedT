@@ -460,6 +460,9 @@ TEST_CASE("FlaggedT")
         auto works = more3(v(bigEnough));
         REQUIRE(works.get().size() == 4);
 
+        auto mt = MoreThan<v, 2>(MoreThan<v, 3>(v(bigEnough)));
+        REQUIRE(mt.get().size() == 4);
+
         auto fs = MoreThan<v, 3>(FixedSized<v, 4>(v(bigEnough)));
         REQUIRE(fs.get().size() == 4);
 
@@ -477,6 +480,9 @@ TEST_CASE("FlaggedT")
         auto smallEnough = std::vector<int>({ 1, 2 });
         auto works = less3(v(smallEnough));
         REQUIRE(works.get().size() == 2);
+
+        auto lt = LessThan<v, 4>(LessThan<v, 3>(v(smallEnough)));
+        REQUIRE(lt.get().size() == 2);
 
         auto fs = LessThan<v, 3>(FixedSized<v, 2>(v(smallEnough)));
         REQUIRE(fs.get().size() == 2);
@@ -517,6 +523,9 @@ TEST_CASE("FlaggedT")
 
         auto fs = FixedRangeInclusive<v, 1, 3>(FixedSized<v, 2>({1, 2}));
         REQUIRE(fs.get().size() == 2);
+
+        auto fi = FixedRangeInclusive<v, 1, 3>(FixedRangeInclusive<v, 2, 3>({1, 2}));
+        REQUIRE(fi.get().size() == 2);
     }
 
     SECTION("Sorted")
