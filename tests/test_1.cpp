@@ -24,27 +24,22 @@ using namespace flaggedT;
 
 //examples (move these to example files) [also the example test case]
 //generator
-NonNull<std::unique_ptr<int> > safe_generator()
-{
+NonNull<std::unique_ptr<int> > safe_generator() {
     return NonNull<std::unique_ptr<int> >(std::unique_ptr<int>(new int(5)));
 }
 
-int no_need_to_check_for_null(NonNull<std::unique_ptr<int> >&& in)
-{
+int no_need_to_check_for_null(NonNull<std::unique_ptr<int> >&& in) {
     return *(in.get().get()) + 1;
 }
 
-int add_one(int in)
-{
+int add_one(int in) {
     return in + 1;
 }
 
 //examples (move these to example files) [also the example test case]
 
-TEST_CASE("FlaggedT")
-{
-    SECTION("Immutable")
-    {
+TEST_CASE("FlaggedT") {
+    SECTION("Immutable") {
         auto im = Immutable<int>(3);
 
         int copied = im;
@@ -59,8 +54,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(safe_sharing.get() == 4);
     }
 
-    SECTION("NonNull")
-    {
+    SECTION("NonNull") {
         //won't even compile, since nullptr_t overload is deleted
         //auto wontCompile = NonNull<int*>::make_non_null(nullptr);
 
@@ -73,8 +67,7 @@ TEST_CASE("FlaggedT")
         delete i2s;
     }
 
-    SECTION("NonZero")
-    {
+    SECTION("NonZero") {
         int ifail = 0;
         float ffail = 0.0f;
         double dfail = 0.0;
@@ -120,8 +113,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(be.get() == 2.5);
     }
 
-    SECTION("Positive")
-    {
+    SECTION("Positive") {
         int ifail = -1;
         float ffail = -1.0f;
         double dfail = -1.0;
@@ -163,8 +155,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(be.get() == 0.3);
     }
 
-    SECTION("NonPositive")
-    {
+    SECTION("NonPositive") {
         int ifail = 1;
         float ffail = 1.0f;
         double dfail = 1.0;
@@ -201,8 +192,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(be.get() == -0.3);
     }
 
-    SECTION("Negative")
-    {
+    SECTION("Negative") {
         int ifail = 1;
         float ffail = 1.0f;
         double dfail = 1.0;
@@ -244,8 +234,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(be.get() == -0.3);
     }
 
-    SECTION("NonNegative")
-    {
+    SECTION("NonNegative") {
         int ifail = -1;
         float ffail = -1.0f;
         double dfail = -1.0;
@@ -429,8 +418,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(bi.get() == 2);
     }
 
-    SECTION("NonEmpty")
-    {
+    SECTION("NonEmpty") {
         using v = std::vector<int>;
         auto emptyVec = v();
         REQUIRE_THROWS(NonEmpty<v>(std::move(emptyVec)));
@@ -449,8 +437,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(fri.get().size() == 2);
     }
 
-    SECTION("MoreThan")
-    {
+    SECTION("MoreThan") {
         using v = std::vector<int>;
         auto tooSmall = v({ 1, 2, 3 });
         using more3 = MoreThan<v, 3>;
@@ -470,8 +457,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(fri.get().size() == 4);
     }
 
-    SECTION("LessThan")
-    {
+    SECTION("LessThan") {
         using v = std::vector<int>;
         auto tooBig = v({ 1, 2, 3 });
         using less3 = LessThan<v, 3>;
@@ -491,8 +477,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(fri.get().size() == 2);
     }
 
-    SECTION("FixedSized")
-    {
+    SECTION("FixedSized") {
         auto tooBig = std::vector<int>({ 1, 2, 3 });
         auto tooSmall = std::vector<int>({ 1 });
         auto correct = std::vector<int>({ 1, 2 });
@@ -504,8 +489,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(works.get().size() == 2);
     }
 
-    SECTION("FixedRangeInclusive")
-    {
+    SECTION("FixedRangeInclusive") {
         using v = std::vector<int>;
         constexpr size_t nMin = 3;
         constexpr size_t nMax = 5;
@@ -528,8 +512,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(fi.get().size() == 2);
     }
 
-    SECTION("Sorted")
-    {
+    SECTION("Sorted") {
         std::vector<int> unsorted({ 1, 7, 8, 14, 3 });
 
         REQUIRE(!std::is_sorted(unsorted.begin(), unsorted.end()));
@@ -538,16 +521,14 @@ TEST_CASE("FlaggedT")
         REQUIRE(std::is_sorted(sorted.get().begin(), sorted.get().end()));
     }
 
-    SECTION("UNIQUE")
-    {
+    SECTION("UNIQUE") {
         std::vector<int> duped({ 1, 1, 2, 2, 3, 3, 7, 9, 11 });
 
         auto unduped = Unique<std::vector<int> >(std::move(duped));
         REQUIRE(unduped.get().size() == 6);
     }
 
-    SECTION("UNIQUESORTED")
-    {
+    SECTION("UNIQUESORTED") {
         std::vector<int> dupedUnsorted({ 11, 9, 7, 3, 3, 2, 2, 1, 1 });
 
         auto fixed = UniqueAndSorted<std::vector<int> >(std::move(dupedUnsorted));
@@ -555,8 +536,7 @@ TEST_CASE("FlaggedT")
         REQUIRE(fixed.get().size() == 6);
     }
 
-    SECTION("Move this to an example file")
-    {
+    SECTION("Move this to an example file") {
         auto tmp = safe_generator();
         auto res = no_need_to_check_for_null(std::move(tmp));
 
