@@ -15,6 +15,7 @@
 #define FLAGGEDT_H
 
 #include <utility>
+#include <tuple>
 
 namespace flaggedT {
 
@@ -1098,6 +1099,51 @@ public:
         static_assert(SIZE >= MINSIZE && SIZE <= MAXSIZE, "FixedRangeInclusive can only be constructed by a FixedSize if its size is between MINSIZE and MAXSIZE");
     }
 };
+
+//------------------------------------------------------------------------------
+
+#ifndef FLAGGEDT_NO17
+
+template <typename... Types>
+class EqualSized : public FlaggedTBase<std::tuple<Types...>> {
+    using base = FlaggedTBase<std::tuple<Types...>>;
+
+public:
+    EqualSized() = delete;
+
+    EqualSized(EqualSized const&) = default;
+    EqualSized(EqualSized&&) = default;
+    EqualSized& operator=(EqualSized const&) = default;
+    EqualSized& operator=(EqualSized&&) = default;
+
+    ///THROWS
+    explicit EqualSized(std::tuple<Types...>&& in)
+        : base(std::move(in)) {
+
+        bool initialized{false};
+        size_t size{0};
+
+        auto ensure = [&] (auto x) {
+            if (initialized && size != std::size(x))
+                throw FlaggedTError("Tried to create EqualSized with elements of different sizes");
+            else if (!initialized) {
+                initialized = true;
+                size = std::size(x);
+            }
+            return 0;
+        };
+
+        std::apply([&](auto ...x) { std::make_tuple(ensure(x)...);}, base::data);
+    }
+
+    ///THROWS
+    explicit EqualSized(Types&&... args) :
+        EqualSized(std::make_tuple(args...))
+    {}
+};
+
+#endif
+
 }
 
 #endif // FLAGGEDT_H

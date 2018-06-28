@@ -7,6 +7,8 @@ A C++ library for type level flagging.
 Examples, Tutorials
 ---------------------
 ```cpp
+#define FLAGGEDT_NO17 //before include in case c++17 isn't supported (types with c++17 tag not available then)
+#include "flaggedT.h"
 using namespace flaggedT;
 ```
 
@@ -266,9 +268,21 @@ void access_four(MoreThan<std::vector<int>,3> const& in) {
 //T.size() >= MINSIZE && T.size() <= MAXSIZE
 ```
 
+### EqualSized<Types...> [c++17]
+```cpp
+//ensures that all passed types have the same size
+//its internal type is std::tuple<Types...>
+auto works  = EqualSized<vector<int>, array<int, 3>, array<double, 3>>({ 1, 2, 3 }, { 5, 6, 7 }, { 1.0, 2.7, 1.1 });
+
+auto fails  = EqualSized<vector<int>, array<int, 3>, array<double, 3>>({ 1, 2, 3, 4 }, { 5, 6, 7 }, { 1.0, 2.7, 1.1 });
+auto fails2 = EqualSized<vector<int>, array<int, 3>, array<double, 2>>({ 1, 2, 3 }, { 5, 6, 7 }, { 1.0, 2.7 });
+
+auto fromTuple = EqualSized(make_tuple<vector<int>, array<int, 3>, array<double, 3>>({ 1, 2, 3, 4 }, { 5, 6, 7 }, { 1.0, 2.7, 1.1 }));
+```
+
 Version
 -------
-3.0.1
+4.0.0
 
 License
 ------

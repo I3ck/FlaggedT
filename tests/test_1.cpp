@@ -24,11 +24,11 @@ using namespace flaggedT;
 
 //examples (move these to example files) [also the example test case]
 //generator
-NonNull<std::unique_ptr<int> > safe_generator() {
-    return NonNull<std::unique_ptr<int> >(std::unique_ptr<int>(new int(5)));
+NonNull<unique_ptr<int> > safe_generator() {
+    return NonNull<unique_ptr<int> >(unique_ptr<int>(new int(5)));
 }
 
-int no_need_to_check_for_null(NonNull<std::unique_ptr<int> >&& in) {
+int no_need_to_check_for_null(NonNull<unique_ptr<int> >&& in) {
     return *(in.get().get()) + 1;
 }
 
@@ -74,11 +74,11 @@ TEST_CASE("FlaggedT") {
         //auto wontCompile = NonNull<int*>::make_non_null(nullptr);
 
         int* i = nullptr;
-        REQUIRE_THROWS(NonNull<int*>(std::move(i)));
+        REQUIRE_THROWS(NonNull<int*>(move(i)));
 
         int* i2 = new int(3);
-        auto nn = NonNull<int*>(std::move(i2));
-        int* i2s = std::move(nn);
+        auto nn = NonNull<int*>(move(i2));
+        int* i2s = move(nn);
         delete i2s;
     }
 
@@ -91,13 +91,13 @@ TEST_CASE("FlaggedT") {
         float fworks = 1.0f;
         double dworks = 1.0;
 
-        REQUIRE_THROWS(NonZero<int>(std::move(ifail)));
-        REQUIRE_THROWS(NonZero<float>(std::move(ffail)));
-        REQUIRE_THROWS(NonZero<double>(std::move(dfail)));
+        REQUIRE_THROWS(NonZero<int>(move(ifail)));
+        REQUIRE_THROWS(NonZero<float>(move(ffail)));
+        REQUIRE_THROWS(NonZero<double>(move(dfail)));
 
-        auto i = NonZero<int>(std::move(iworks));
-        auto f = NonZero<float>(std::move(fworks));
-        auto d = NonZero<double>(std::move(dworks));
+        auto i = NonZero<int>(move(iworks));
+        auto f = NonZero<float>(move(fworks));
+        auto d = NonZero<double>(move(dworks));
 
         REQUIRE(i.get() == 1);
         REQUIRE(f.get() == 1.0f);
@@ -141,17 +141,17 @@ TEST_CASE("FlaggedT") {
         float fworks = 1.0f;
         double dworks = 1.0;
 
-        REQUIRE_THROWS(Positive<int>(std::move(ifail)));
-        REQUIRE_THROWS(Positive<float>(std::move(ffail)));
-        REQUIRE_THROWS(Positive<double>(std::move(dfail)));
+        REQUIRE_THROWS(Positive<int>(move(ifail)));
+        REQUIRE_THROWS(Positive<float>(move(ffail)));
+        REQUIRE_THROWS(Positive<double>(move(dfail)));
 
-        REQUIRE_THROWS(Positive<int>(std::move(ifail2)));
-        REQUIRE_THROWS(Positive<float>(std::move(ffail2)));
-        REQUIRE_THROWS(Positive<double>(std::move(dfail2)));
+        REQUIRE_THROWS(Positive<int>(move(ifail2)));
+        REQUIRE_THROWS(Positive<float>(move(ffail2)));
+        REQUIRE_THROWS(Positive<double>(move(dfail2)));
 
-        auto i = Positive<int>(std::move(iworks));
-        auto f = Positive<float>(std::move(fworks));
-        auto d = Positive<double>(std::move(dworks));
+        auto i = Positive<int>(move(iworks));
+        auto f = Positive<float>(move(fworks));
+        auto d = Positive<double>(move(dworks));
 
         REQUIRE(i.get() == 1);
         REQUIRE(f.get() == 1.0f);
@@ -179,13 +179,13 @@ TEST_CASE("FlaggedT") {
         float fworks = -1.0f;
         double dworks = -1.0;
 
-        REQUIRE_THROWS(NonPositive<int>(std::move(ifail)));
-        REQUIRE_THROWS(NonPositive<float>(std::move(ffail)));
-        REQUIRE_THROWS(NonPositive<double>(std::move(dfail)));
+        REQUIRE_THROWS(NonPositive<int>(move(ifail)));
+        REQUIRE_THROWS(NonPositive<float>(move(ffail)));
+        REQUIRE_THROWS(NonPositive<double>(move(dfail)));
 
-        auto i = NonPositive<int>(std::move(iworks));
-        auto f = NonPositive<float>(std::move(fworks));
-        auto d = NonPositive<double>(std::move(dworks));
+        auto i = NonPositive<int>(move(iworks));
+        auto f = NonPositive<float>(move(fworks));
+        auto d = NonPositive<double>(move(dworks));
 
         REQUIRE(i.get() == -1);
         REQUIRE(f.get() == -1.0f);
@@ -220,17 +220,17 @@ TEST_CASE("FlaggedT") {
         float fworks = -1.0f;
         double dworks = -1.0;
 
-        REQUIRE_THROWS(Negative<int>(std::move(ifail)));
-        REQUIRE_THROWS(Negative<float>(std::move(ffail)));
-        REQUIRE_THROWS(Negative<double>(std::move(dfail)));
+        REQUIRE_THROWS(Negative<int>(move(ifail)));
+        REQUIRE_THROWS(Negative<float>(move(ffail)));
+        REQUIRE_THROWS(Negative<double>(move(dfail)));
 
-        REQUIRE_THROWS(Negative<int>(std::move(ifail2)));
-        REQUIRE_THROWS(Negative<float>(std::move(ffail2)));
-        REQUIRE_THROWS(Negative<double>(std::move(dfail2)));
+        REQUIRE_THROWS(Negative<int>(move(ifail2)));
+        REQUIRE_THROWS(Negative<float>(move(ffail2)));
+        REQUIRE_THROWS(Negative<double>(move(dfail2)));
 
-        auto i = Negative<int>(std::move(iworks));
-        auto f = Negative<float>(std::move(fworks));
-        auto d = Negative<double>(std::move(dworks));
+        auto i = Negative<int>(move(iworks));
+        auto f = Negative<float>(move(fworks));
+        auto d = Negative<double>(move(dworks));
 
         REQUIRE(i.get() == -1);
         REQUIRE(f.get() == -1.0f);
@@ -258,13 +258,13 @@ TEST_CASE("FlaggedT") {
         float fworks = 1.0f;
         double dworks = 1.0;
 
-        REQUIRE_THROWS(NonNegative<int>(std::move(ifail)));
-        REQUIRE_THROWS(NonNegative<float>(std::move(ffail)));
-        REQUIRE_THROWS(NonNegative<double>(std::move(dfail)));
+        REQUIRE_THROWS(NonNegative<int>(move(ifail)));
+        REQUIRE_THROWS(NonNegative<float>(move(ffail)));
+        REQUIRE_THROWS(NonNegative<double>(move(dfail)));
 
-        auto i = NonNegative<int>(std::move(iworks));
-        auto f = NonNegative<float>(std::move(fworks));
-        auto d = NonNegative<double>(std::move(dworks));
+        auto i = NonNegative<int>(move(iworks));
+        auto f = NonNegative<float>(move(fworks));
+        auto d = NonNegative<double>(move(dworks));
 
         REQUIRE(i.get() == 1);
         REQUIRE(f.get() == 1.0f);
@@ -434,9 +434,9 @@ TEST_CASE("FlaggedT") {
     }
 
     SECTION("NonEmpty") {
-        using v = std::vector<int>;
+        using v = vector<int>;
         auto emptyVec = v();
-        REQUIRE_THROWS(NonEmpty<v>(std::move(emptyVec)));
+        REQUIRE_THROWS(NonEmpty<v>(move(emptyVec)));
 
         auto goodVec = v({ 1, 2 });
         auto ne = NonEmpty<v>(v(goodVec));
@@ -453,10 +453,10 @@ TEST_CASE("FlaggedT") {
     }
 
     SECTION("MoreThan") {
-        using v = std::vector<int>;
+        using v = vector<int>;
         auto tooSmall = v({ 1, 2, 3 });
         using more3 = MoreThan<v, 3>;
-        REQUIRE_THROWS(more3(std::move(tooSmall)));
+        REQUIRE_THROWS(more3(move(tooSmall)));
 
         auto bigEnough = v({ 1, 2, 3, 4 });
         auto works = more3(v(bigEnough));
@@ -473,12 +473,12 @@ TEST_CASE("FlaggedT") {
     }
 
     SECTION("LessThan") {
-        using v = std::vector<int>;
+        using v = vector<int>;
         auto tooBig = v({ 1, 2, 3 });
         using less3 = LessThan<v, 3>;
-        REQUIRE_THROWS(less3(std::move(tooBig)));
+        REQUIRE_THROWS(less3(move(tooBig)));
 
-        auto smallEnough = std::vector<int>({ 1, 2 });
+        auto smallEnough = vector<int>({ 1, 2 });
         auto works = less3(v(smallEnough));
         REQUIRE(works.get().size() == 2);
 
@@ -493,19 +493,19 @@ TEST_CASE("FlaggedT") {
     }
 
     SECTION("FixedSized") {
-        auto tooBig = std::vector<int>({ 1, 2, 3 });
-        auto tooSmall = std::vector<int>({ 1 });
-        auto correct = std::vector<int>({ 1, 2 });
-        using fixed2 = FixedSized<std::vector<int>, 2>;
-        REQUIRE_THROWS(fixed2(std::move(tooBig)));
-        REQUIRE_THROWS(fixed2(std::move(tooSmall)));
+        auto tooBig = vector<int>({ 1, 2, 3 });
+        auto tooSmall = vector<int>({ 1 });
+        auto correct = vector<int>({ 1, 2 });
+        using fixed2 = FixedSized<vector<int>, 2>;
+        REQUIRE_THROWS(fixed2(move(tooBig)));
+        REQUIRE_THROWS(fixed2(move(tooSmall)));
 
-        auto works = fixed2(std::move(correct));
+        auto works = fixed2(move(correct));
         REQUIRE(works.get().size() == 2);
     }
 
     SECTION("FixedRangeInclusive") {
-        using v = std::vector<int>;
+        using v = vector<int>;
         constexpr size_t nMin = 3;
         constexpr size_t nMax = 5;
 
@@ -528,32 +528,39 @@ TEST_CASE("FlaggedT") {
     }
 
     SECTION("Sorted") {
-        std::vector<int> unsorted({ 1, 7, 8, 14, 3 });
+        vector<int> unsorted({ 1, 7, 8, 14, 3 });
 
-        REQUIRE(!std::is_sorted(unsorted.begin(), unsorted.end()));
+        REQUIRE(!is_sorted(unsorted.begin(), unsorted.end()));
 
-        auto sorted = Sorted<std::vector<int> >(std::move(unsorted));
-        REQUIRE(std::is_sorted(sorted.get().begin(), sorted.get().end()));
+        auto sorted = Sorted<vector<int> >(move(unsorted));
+        REQUIRE(is_sorted(sorted.get().begin(), sorted.get().end()));
     }
 
     SECTION("UNIQUE") {
-        std::vector<int> duped({ 1, 1, 2, 2, 3, 3, 7, 9, 11 });
+        vector<int> duped({ 1, 1, 2, 2, 3, 3, 7, 9, 11 });
 
-        auto unduped = Unique<std::vector<int> >(std::move(duped));
+        auto unduped = Unique<vector<int> >(move(duped));
         REQUIRE(unduped.get().size() == 6);
     }
 
     SECTION("UNIQUESORTED") {
-        std::vector<int> dupedUnsorted({ 11, 9, 7, 3, 3, 2, 2, 1, 1 });
+        vector<int> dupedUnsorted({ 11, 9, 7, 3, 3, 2, 2, 1, 1 });
 
-        auto fixed = UniqueAndSorted<std::vector<int> >(std::move(dupedUnsorted));
-        REQUIRE(std::is_sorted(fixed.get().begin(), fixed.get().end()));
+        auto fixed = UniqueAndSorted<vector<int> >(move(dupedUnsorted));
+        REQUIRE(is_sorted(fixed.get().begin(), fixed.get().end()));
         REQUIRE(fixed.get().size() == 6);
+    }
+
+    SECTION("EqualSized") {
+        auto es = EqualSized<vector<int>, array<int, 3>, array<double, 3>>({ 1, 2, 3 }, { 5, 6, 7 }, { 1.0, 2.7, 1.1 });
+
+        REQUIRE_THROWS((EqualSized<vector<int>, array<int, 3>, array<double, 3>>({ 1, 2, 3, 4 }, { 5, 6, 7 }, { 1.0, 2.7, 1.1 })));
+        REQUIRE_THROWS((EqualSized<vector<int>, array<int, 3>, array<double, 2>>({ 1, 2, 3 }, { 5, 6, 7 }, { 1.0, 2.7 })));
     }
 
     SECTION("Move this to an example file") {
         auto tmp = safe_generator();
-        auto res = no_need_to_check_for_null(std::move(tmp));
+        auto res = no_need_to_check_for_null(move(tmp));
 
         auto autoUnwrap = NonNegative<int>(3);
         int result = add_one(autoUnwrap);
